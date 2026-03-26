@@ -647,7 +647,7 @@
 </div>
 
 <script>
-const BIN_ID  = "69becda5c3097a1dd5477a1b";
+const BIN_ID  = "69c4ac57b7ec241ddca4251c";
 const API_KEY = "$2a$10$3mHD86jkJ6I01vu8PfE3qOdLvkey.CY/LPy/h8.yxxqnq0IxzlZ42";
 const URL     = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
 
@@ -687,9 +687,7 @@ function getInitial(name) {
 // ===== FETCH DATA =====
 async function fetchData() {
   try {
-    const res = await fetch(URL, {
-      headers: { "X-Master-Key": API_KEY }
-    });
+    const res = await fetch(URL);
     if (!res.ok) throw new Error("HTTP " + res.status);
     const json = await res.json();
     DATA = json.record;
