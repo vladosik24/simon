@@ -8,7 +8,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const BOT_TOKEN  = "8268677697:AAEf7MoAAkcZoi-A7EITHXo1taOGiEpV7yM";
+const BOT_TOKEN  = "8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q";
 const CHANNEL_ID = "@SimonUkraine";
 const DATA_TAG   = "SIMON_DATA_V1";
 
