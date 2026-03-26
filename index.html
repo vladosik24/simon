@@ -2,193 +2,323 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simon RP</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Симон — РП</title>
 <style>
-body {
-  margin: 0;
-  font-family: system-ui;
-  background: #0f172a;
-  color: #fff;
-}
+  @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Nunito:wght@400;600;700&display=swap');
+  :root {
+    --bg:#0d0f1a; --surface:#151727; --card:#1c1f35;
+    --border:#2a2e4a; --accent:#7c5cfc; --accent2:#fc5c9c;
+    --text:#e8eaff; --muted:#6b6e99;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image:linear-gradient(rgba(124,92,252,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.04) 1px,transparent 1px);
+    background-size:40px 40px; pointer-events:none; z-index:0;
+  }
+  .app { position:relative; z-index:1; max-width:480px; margin:0 auto; padding:16px 12px 100px; }
 
-.header {
-  padding: 10px;
-  position: sticky;
-  top: 0;
-  background: #0f172a;
-}
+  .header { display:flex; align-items:center; gap:10px; padding:16px 0 20px; }
+  .hicon { width:44px; height:44px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:0 0 20px rgba(124,92,252,0.5); flex-shrink:0; }
+  .htitle { font-family:'Unbounded',sans-serif; font-size:18px; font-weight:900; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hsub { font-size:11px; color:var(--muted); margin-top:2px; }
 
-input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-}
+  .tabs { display:flex; background:var(--surface); border-radius:14px; padding:4px; gap:4px; margin-bottom:20px; border:1px solid var(--border); }
+  .tab { flex:1; padding:9px 6px; border-radius:10px; border:none; background:none; color:var(--muted); font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+  .tab.active { background:linear-gradient(135deg,var(--accent),#5a3dc4); color:#fff; box-shadow:0 4px 14px rgba(124,92,252,0.4); }
 
-.section {
-  padding: 10px;
-}
+  .block { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:12px; }
+  .slabel { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
 
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
+  .field {
+    width:100%; background:var(--bg); border:1px solid var(--border);
+    border-radius:10px; padding:12px 14px; color:var(--text);
+    font-family:'Nunito',sans-serif; font-size:15px; font-weight:700;
+    outline:none; transition:border-color .2s; resize:none;
+  }
+  .field:focus { border-color:var(--accent); }
+  .field::placeholder { color:var(--muted); font-weight:600; font-size:13px; }
 
-.card {
-  background: #1e293b;
-  padding: 12px;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: 0.2s;
-}
+  /* Емодзі */
+  .egrid { display:flex; flex-wrap:wrap; gap:8px; }
+  .ebtn {
+    width:44px; height:44px; border-radius:12px; border:1px solid var(--border);
+    background:var(--bg); font-size:22px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .15s; -webkit-tap-highlight-color:transparent;
+  }
+  .ebtn.sel { border-color:var(--accent2); background:rgba(252,92,156,0.15); transform:scale(1.15); box-shadow:0 0 10px rgba(252,92,156,0.4); }
+  .ebtn:active { transform:scale(0.88) !important; }
 
-.card:hover {
-  transform: scale(1.05);
-}
+  /* Превью */
+  .preview {
+    background:rgba(124,92,252,0.08); border:1px solid rgba(124,92,252,0.25);
+    border-radius:14px; padding:14px; margin-bottom:12px;
+    font-size:15px; font-weight:700; line-height:1.7; color:var(--text); min-height:54px;
+  }
+  .preview .ph { color:var(--muted); font-weight:600; font-size:13px; }
 
-.star {
-  float: right;
-  cursor: pointer;
-}
+  .exec-btn { width:100%; padding:14px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border:none; border-radius:14px; color:#fff; font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(124,92,252,0.4); transition:all .2s; }
+  .exec-btn:active { transform:scale(0.97); }
+  .exec-btn:disabled { background:var(--border); box-shadow:none; color:var(--muted); cursor:not-allowed; transform:none; }
+
+  /* Лента */
+  .feed-empty { text-align:center; padding:50px 20px; color:var(--muted); }
+  .feed-empty-icon { font-size:48px; margin-bottom:12px; }
+  .rp-item { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:10px; animation:fin .3s ease; }
+  @keyframes fin { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .rp-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .rp-who { font-weight:700; font-size:13px; color:var(--accent); }
+  .rp-when { font-size:11px; color:var(--muted); }
+  .rp-body { font-size:15px; font-weight:700; line-height:1.6; }
+  .rp-btns { display:flex; gap:8px; margin-top:10px; }
+  .rbtn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:13px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; transition:all .15s; }
+  .rbtn.liked { border-color:var(--accent2); color:var(--accent2); background:rgba(252,92,156,0.1); }
+
+  .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--accent); border-radius:12px; padding:10px 20px; font-size:13px; font-weight:700; opacity:0; transition:all .3s; z-index:100; white-space:nowrap; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(13,15,26,0.96); backdrop-filter:blur(12px); border-top:1px solid var(--border); padding:10px 20px 16px; display:flex; justify-content:space-around; z-index:50; }
+  .nitem { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; color:var(--muted); font-weight:700; cursor:pointer; background:none; border:none; font-family:'Nunito',sans-serif; padding:4px 12px; }
+  .nitem span { font-size:20px; }
+  .nitem.active { color:var(--accent); }
+  .badge { display:inline-flex; background:var(--accent2); color:#fff; font-size:9px; font-weight:900; padding:1px 5px; border-radius:6px; margin-left:4px; vertical-align:middle; }
 </style>
 </head>
-
 <body>
+<div class="app">
 
-<div class="header">
-  <input id="search" placeholder="🔍 Пошук команди...">
+  <div class="header">
+    <div class="hicon">⚔️</div>
+    <div>
+      <div class="htitle">СИМОН РП</div>
+      <div class="hsub">Рольові дії в чаті</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('create')" id="tab-create">⚡ Створити</button>
+    <button class="tab" onclick="switchTab('feed')" id="tab-feed">📜 Мої РП <span class="badge" id="fcnt">0</span></button>
+  </div>
+
+  <!-- CREATE -->
+  <div id="page-create">
+
+    <!-- Хто -->
+    <div class="block">
+      <div class="slabel">👤 Твій нік</div>
+      <input class="field" id="f-who" placeholder="Наприклад: Влад" oninput="upPrev()">
+    </div>
+
+    <!-- Дія -->
+    <div class="block">
+      <div class="slabel">⚡ Дія</div>
+      <input class="field" id="f-act" placeholder="Наприклад: вкусив, обіймає, штовхнув…" oninput="upPrev()">
+    </div>
+
+    <!-- Ціль -->
+    <div class="block">
+      <div class="slabel">🎯 Ціль</div>
+      <input class="field" id="f-target" placeholder="Наприклад: Валя, @user…" oninput="upPrev()">
+    </div>
+
+    <!-- Текст -->
+    <div class="block">
+      <div class="slabel">✏️ Текст (необов'язково)</div>
+      <input class="field" id="f-text" placeholder="Наприклад: кусь, ааа, хаха…" oninput="upPrev()">
+    </div>
+
+    <!-- Емодзі -->
+    <div class="block">
+      <div class="slabel">😊 Емодзі</div>
+      <div class="egrid" id="emo-grid"></div>
+    </div>
+
+    <!-- Превью -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="slabel" style="margin-bottom:0">👁 Превью</div>
+      <button onclick="upPrev()" style="background:rgba(124,92,252,0.15);border:1px solid var(--accent);border-radius:8px;padding:4px 10px;color:var(--accent);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">🎲 Інший варіант</button>
+    </div>
+    <div class="preview" id="preview"><span class="ph">Заповни поля — тут з'явиться РП…</span></div>
+
+    <button class="exec-btn" id="exec-btn" onclick="doRp()" disabled>🎭 Виконати РП</button>
+  </div>
+
+  <!-- FEED -->
+  <div id="page-feed" style="display:none">
+    <div class="slabel">Мої РП команди</div>
+    <div id="feed-list">
+      <div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Поки порожньо.<br>Виконай першу РП!</div></div>
+    </div>
+  </div>
+
 </div>
 
-<div class="section">
-  <h3>⭐ Обране</h3>
-  <div id="favorites" class="cards"></div>
+<div class="bottom-nav">
+  <button class="nitem active" id="nav-create" onclick="switchTab('create')"><span>⚡</span>Створити</button>
+  <button class="nitem" id="nav-feed" onclick="switchTab('feed')"><span>📜</span>Мої РП</button>
 </div>
-
-<div class="section">
-  <h3>📊 Топ дій</h3>
-  <div id="top" class="cards"></div>
-</div>
-
-<div class="section">
-  <h3>🎭 Усі команди</h3>
-  <div id="list" class="cards"></div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-const tg = window.Telegram.WebApp;
-tg.expand();
+const EMOJIS = ['💕','🥰','😘','💋','🫂','❤️','👊','💥','⚔️','😤','🔥','💢','😡','🦵','💪','🌿','💊','🛏️','🌙','☕','🎉','😜','🎈','🥳','😂','💃','🕺','😢','😔','💔','😭','⚡','🎭','🌟','💫','🔮','🎯','🌀','👀','😏','🤗','🫶','✨','🩷','😈','🫠','🤭','💀','🐾','🌸'];
 
-// 📦 всі команди
-const actions = [
-  "обійняти","поцілувати","погладити","вдарити",
-  "лоскотати","дражнити","заспівати","подарувати квіти",
-  "засміятись","заплакати","медитувати"
+let selEmo = null;
+let feed = [], lks = {};
+
+// Шаблони варіантів — {who}, {act}, {target}, {text} замінюються
+const VARIANTS = [
+  '{emoji} {who} {act} {target} — {text}',
+  '{emoji} {who} раптово {act} {target}! {text}',
+  '✨ {who} ніжно {act} {target} {emoji} {text}',
+  '{who} підійшов до {target} і {act} {emoji} {text}',
+  '👀 {who} непомітно {act} {target}... {text} {emoji}',
+  '{who} з усмішкою {act} {target} {emoji} — {text}',
+  '💫 {who} {act} {target} і втік! {text} {emoji}',
+  '{who} несподівано {act} {target} {emoji} {text}',
+  '〔РП〕 {who} {act} {target} {emoji} {text}',
+  '{who} повільно {act} {target}... {text} {emoji}',
 ];
 
-// ⭐ local storage
-let fav = JSON.parse(localStorage.getItem("fav") || "[]");
-let stats = JSON.parse(localStorage.getItem("stats") || "{}");
-
-// 🎯 рендер
-function render(list = actions) {
-  const container = document.getElementById("list");
-  container.innerHTML = "";
-
-  list.forEach(a => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const star = fav.includes(a) ? "⭐" : "☆";
-
-    card.innerHTML = `
-      ${a}
-      <span class="star">${star}</span>
-    `;
-
-    // ⭐ обране
-    card.querySelector(".star").onclick = (e) => {
-      e.stopPropagation();
-      toggleFav(a);
-    };
-
-    // 🎭 дія
-    card.onclick = () => sendRP(a);
-
-    container.appendChild(card);
-  });
+function pickVariant(who, act, target, text, emoji) {
+  const tpl = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+  return tpl
+    .replace('{who}', who)
+    .replace('{act}', act)
+    .replace('{target}', target)
+    .replace('{text}', text || '')
+    .replace('{emoji}', emoji)
+    .replace(/\s{2,}/g, ' ').trim();
 }
 
-// ⭐ toggle
-function toggleFav(a) {
-  if (fav.includes(a)) {
-    fav = fav.filter(x => x !== a);
-  } else {
-    fav.push(a);
+// Рендер емодзі
+document.getElementById('emo-grid').innerHTML = EMOJIS.map(e =>
+  `<button class="ebtn" onclick="pickEmo('${e}',this)">${e}</button>`
+).join('');
+
+function pickEmo(e, btn) {
+  selEmo = e;
+  document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  upPrev();
+  upBtn();
+}
+
+function upPrev() {
+  const who    = document.getElementById('f-who').value.trim();
+  const act    = document.getElementById('f-act').value.trim();
+  const target = document.getElementById('f-target').value.trim();
+  const text   = document.getElementById('f-text').value.trim();
+  const emo    = selEmo || '';
+
+  if (!who && !act && !target) {
+    document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля — тут з\'явиться РП…</span>';
+    upBtn(); return;
   }
-  localStorage.setItem("fav", JSON.stringify(fav));
-  render();
-  renderFav();
+
+  if (!who || !act || !target || !emo) {
+    let parts = [];
+    if (who)    parts.push(`<b style="color:var(--accent)">${who}</b>`);
+    if (act)    parts.push(`<span>${act}</span>`);
+    if (target) parts.push(`<b style="color:var(--accent2)">${target}</b>`);
+    if (text)   parts.push(`— <em style="color:#aaa">${text}</em>`);
+    if (emo)    parts.push(emo);
+    document.getElementById('preview').innerHTML = parts.join(' ') || '<span class="ph">Заповни поля — тут з\'явиться РП…</span>';
+    upBtn(); return;
+  }
+  const raw = pickVariant(who, act, target, text, emo);
+  const hi = raw
+    .replace(new RegExp(who.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')), `<b style="color:var(--accent)">${who}</b>`)
+    .replace(new RegExp(target.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')), `<b style="color:var(--accent2)">${target}</b>`);
+  document.getElementById('preview').innerHTML = hi;
+  upBtn();
 }
 
-// ⭐ рендер обране
-function renderFav() {
-  const container = document.getElementById("favorites");
-  container.innerHTML = "";
-  fav.forEach(a => createCard(a, container));
+function upBtn() {
+  const who    = document.getElementById('f-who').value.trim();
+  const act    = document.getElementById('f-act').value.trim();
+  const target = document.getElementById('f-target').value.trim();
+  document.getElementById('exec-btn').disabled = !(who && act && target && selEmo);
 }
 
-// 📊 топ
-function renderTop() {
-  const container = document.getElementById("top");
-  container.innerHTML = "";
+function doRp() {
+  const who    = document.getElementById('f-who').value.trim();
+  const act    = document.getElementById('f-act').value.trim();
+  const target = document.getElementById('f-target').value.trim();
+  const text   = document.getElementById('f-text').value.trim();
+  if (!who || !act || !target || !selEmo) return;
 
-  const sorted = Object.entries(stats)
-    .sort((a,b) => b[1]-a[1])
-    .slice(0,5);
+  const now  = new Date();
+  const time = now.toLocaleTimeString('uk-UA', {hour:'2-digit', minute:'2-digit'});
+  const id   = Date.now();
 
-  sorted.forEach(([a]) => createCard(a, container));
+  const variant = pickVariant(who, act, target, text, selEmo);
+  feed.unshift({ id, who, act, target, text, emoji: selEmo, time, variant });
+  lks[id] = false;
+  document.getElementById('fcnt').textContent = feed.length;
+  showToast(selEmo + ' РП виконано!');
+
+  // Скинути
+  document.getElementById('f-act').value = '';
+  document.getElementById('f-target').value = '';
+  document.getElementById('f-text').value = '';
+  selEmo = null;
+  document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
+  upPrev();
 }
 
-// 🎴 створення картки
-function createCard(a, container) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerText = a;
-  card.onclick = () => sendRP(a);
-  container.appendChild(card);
+function renderFeed() {
+  const el = document.getElementById('feed-list');
+  if (!feed.length) {
+    el.innerHTML = '<div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Поки порожньо.<br>Виконай першу РП!</div></div>';
+    return;
+  }
+  el.innerHTML = feed.map(r => {
+    let body = r.variant
+      .replace(new RegExp(r.who.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')), `<b style="color:var(--accent)">${r.who}</b>`)
+      .replace(new RegExp(r.target.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')), `<b style="color:var(--accent2)">${r.target}</b>`);
+    return `
+      <div class="rp-item">
+        <div class="rp-top"><span class="rp-who">${r.who}</span><span class="rp-when">${r.time}</span></div>
+        <div class="rp-body">${body}</div>
+        <div class="rp-btns">
+          <button class="rbtn ${lks[r.id]?'liked':''}" onclick="likeRp(${r.id})">❤️ ${lks[r.id]?1:0}</button>
+          <button class="rbtn" onclick="copyRp(${r.id})">📋 Копія</button>
+          <button class="rbtn" onclick="delRp(${r.id})">🗑️</button>
+        </div>
+      </div>`;
+  }).join('');
 }
 
-// 🧠 логіка (з / без цілі)
-function sendRP(action) {
+function likeRp(id) { lks[id]=!lks[id]; renderFeed(); }
+function copyRp(id) {
+  const r = feed.find(x=>x.id===id); if(!r) return;
+  const s = r.variant;
+  if (navigator.clipboard) navigator.clipboard.writeText(s).then(()=>showToast('📋 Скопійовано!'));
+  else showToast(s);
+}
+function delRp(id) { feed=feed.filter(x=>x.id!==id); delete lks[id]; document.getElementById('fcnt').textContent=feed.length; renderFeed(); }
 
-  // 📊 статистика
-  stats[action] = (stats[action] || 0) + 1;
-  localStorage.setItem("stats", JSON.stringify(stats));
-  renderTop();
-
-  tg.sendData(JSON.stringify({
-    type: "rp",
-    action: action,
-    mode: "auto" // 👈 бот сам вирішує (reply чи ні)
-  }));
+function switchTab(tab) {
+  document.getElementById('page-create').style.display = tab==='create' ? '' : 'none';
+  document.getElementById('page-feed').style.display   = tab==='feed'   ? '' : 'none';
+  ['create','feed'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('nav-'+t).classList.toggle('active', t===tab);
+  });
+  if (tab==='feed') renderFeed();
 }
 
-// 🔍 пошук
-document.getElementById("search").oninput = (e) => {
-  const q = e.target.value.toLowerCase();
-  render(actions.filter(a => a.includes(q)));
-};
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
 
-// init
-render();
-renderFav();
-renderTop();
+// Дефолтний нік
+document.getElementById('f-who').value = 'Влад';
 </script>
-
 </body>
 </html>
