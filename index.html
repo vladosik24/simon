@@ -647,9 +647,7 @@
 </div>
 
 <script>
-const BIN_ID  = "69c4adb1aa77b81da91e0f7a";
-const API_KEY = "$2a$10$3mHD86jkJ6I01vu8PfE3qOdLvkey.CY/LPy/h8.yxxqnq0IxzlZ42";
-const URL     = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+const PROXY_URL = "https://95f99f95-4a5c-4901-8889-ba4b35539cef-00-68q12ge7lla2.picard.replit.dev";
 
 let DATA         = null;
 let currentSort  = "xp";
@@ -687,10 +685,11 @@ function getInitial(name) {
 // ===== FETCH DATA =====
 async function fetchData() {
   try {
-    const res = await fetch(URL);
+    const res = await fetch(PROXY_URL + "/data");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const json = await res.json();
-    DATA = json.record;
+    if (!json.ok) throw new Error(json.error || "Немає даних");
+    DATA = json.data;
 
     const d = new Date(DATA.updated_at * 1000);
     document.getElementById("syncTime").textContent =
@@ -699,7 +698,7 @@ async function fetchData() {
     renderAll();
   } catch (e) {
     document.getElementById("playerList").innerHTML =
-      `<div class="error-box">❌ Помилка завантаження даних<br><small>${e.message}</small><br><br>Переконайся що бот вже відправив дані в JSONBin</div>`;
+      `<div class="error-box">❌ ${e.message}<br><small>Напиши /start боту щоб оновити дані</small></div>`;
     document.getElementById("syncTime").textContent = "Помилка";
     document.getElementById("syncDot").style.background = "#ef4444";
   }
