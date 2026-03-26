@@ -1,20 +1,194 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simon RP</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: system-ui;
+  background: #0f172a;
+  color: #fff;
+}
+
+.header {
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  background: #0f172a;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+}
+
+.section {
+  padding: 10px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.star {
+  float: right;
+  cursor: pointer;
+}
+</style>
 </head>
+
 <body>
 
-<div class="app">
-  <h1>🚀 Мій Mini App</h1>
-  <button id="btn">Натисни мене</button>
-  <p id="result"></p>
+<div class="header">
+  <input id="search" placeholder="🔍 Пошук команди...">
 </div>
 
-<script src="app.js"></script>
+<div class="section">
+  <h3>⭐ Обране</h3>
+  <div id="favorites" class="cards"></div>
+</div>
+
+<div class="section">
+  <h3>📊 Топ дій</h3>
+  <div id="top" class="cards"></div>
+</div>
+
+<div class="section">
+  <h3>🎭 Усі команди</h3>
+  <div id="list" class="cards"></div>
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+// 📦 всі команди
+const actions = [
+  "обійняти","поцілувати","погладити","вдарити",
+  "лоскотати","дражнити","заспівати","подарувати квіти",
+  "засміятись","заплакати","медитувати"
+];
+
+// ⭐ local storage
+let fav = JSON.parse(localStorage.getItem("fav") || "[]");
+let stats = JSON.parse(localStorage.getItem("stats") || "{}");
+
+// 🎯 рендер
+function render(list = actions) {
+  const container = document.getElementById("list");
+  container.innerHTML = "";
+
+  list.forEach(a => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const star = fav.includes(a) ? "⭐" : "☆";
+
+    card.innerHTML = `
+      ${a}
+      <span class="star">${star}</span>
+    `;
+
+    // ⭐ обране
+    card.querySelector(".star").onclick = (e) => {
+      e.stopPropagation();
+      toggleFav(a);
+    };
+
+    // 🎭 дія
+    card.onclick = () => sendRP(a);
+
+    container.appendChild(card);
+  });
+}
+
+// ⭐ toggle
+function toggleFav(a) {
+  if (fav.includes(a)) {
+    fav = fav.filter(x => x !== a);
+  } else {
+    fav.push(a);
+  }
+  localStorage.setItem("fav", JSON.stringify(fav));
+  render();
+  renderFav();
+}
+
+// ⭐ рендер обране
+function renderFav() {
+  const container = document.getElementById("favorites");
+  container.innerHTML = "";
+  fav.forEach(a => createCard(a, container));
+}
+
+// 📊 топ
+function renderTop() {
+  const container = document.getElementById("top");
+  container.innerHTML = "";
+
+  const sorted = Object.entries(stats)
+    .sort((a,b) => b[1]-a[1])
+    .slice(0,5);
+
+  sorted.forEach(([a]) => createCard(a, container));
+}
+
+// 🎴 створення картки
+function createCard(a, container) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerText = a;
+  card.onclick = () => sendRP(a);
+  container.appendChild(card);
+}
+
+// 🧠 логіка (з / без цілі)
+function sendRP(action) {
+
+  // 📊 статистика
+  stats[action] = (stats[action] || 0) + 1;
+  localStorage.setItem("stats", JSON.stringify(stats));
+  renderTop();
+
+  tg.sendData(JSON.stringify({
+    type: "rp",
+    action: action,
+    mode: "auto" // 👈 бот сам вирішує (reply чи ні)
+  }));
+}
+
+// 🔍 пошук
+document.getElementById("search").oninput = (e) => {
+  const q = e.target.value.toLowerCase();
+  render(actions.filter(a => a.includes(q)));
+};
+
+// init
+render();
+renderFav();
+renderTop();
+</script>
+
 </body>
 </html>
