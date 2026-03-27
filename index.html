@@ -62,10 +62,8 @@
   .spinner { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
   @keyframes spin { to { transform:rotate(360deg); } }
 
-  /* Лента */
   .feed-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
   .feed-sync { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; }
-  .feed-sync:active { transform:scale(0.95); }
 
   .feed-empty { text-align:center; padding:50px 20px; color:var(--muted); }
   .feed-empty-icon { font-size:48px; margin-bottom:12px; }
@@ -78,7 +76,7 @@
   .rp-usage { font-size:11px; color:var(--muted); background:var(--bg); border-radius:6px; padding:4px 8px; display:inline-block; margin-bottom:8px; }
   .rp-usage code { color:var(--accent2); }
   .rp-btns { display:flex; gap:8px; }
-  .rbtn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; transition:all .15s; }
+  .rbtn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; }
   .rbtn.red { border-color:#ef4444; color:#ef4444; background:rgba(239,68,68,0.1); }
 
   .loading-block { text-align:center; padding:30px; color:var(--muted); }
@@ -158,17 +156,13 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== КОНФІГ =====
-const BOT_TOKEN  = '8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q';
-const BIN_ID     = '69c6a5c5c3097a1dd56832ab';
-const BIN_KEY    = '$2a$10$3mHD86jkJ6I01vu8PfE3qOdLvkey.CY/LPy/h8.yxxqnq0IxzlZ42';
-const BIN_URL    = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
-const BOT_API    = 'https://api.telegram.org/bot' + BOT_TOKEN;
+const BOT_TOKEN = '8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q';
+const API = 'https://api.telegram.org/bot' + BOT_TOKEN;
 
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-let myId   = null;
+let myId = null;
 let myName = 'Влад';
 if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
   myId   = String(tg.initDataUnsafe.user.id);
@@ -210,29 +204,101 @@ function upBtn() {
   document.getElementById('btn-save').disabled = !ok;
 }
 
-// ===== ЧИТАТИ З JSONBIN =====
-async function loadCmds() {
-  document.getElementById('feed-list').innerHTML =
-    '<div class="loading-block"><div class="loading-spin"></div>Завантаження…</div>';
+// ===== ЗБЕРЕГТИ — відправляємо команду боту =====
+async function saveCmd() {
+  const name = document.getElementById('f-name').value.trim().toLowerCase();
+  const text = document.getElementById('f-text').value.trim();
+  if (!name || !text || !selEmo) return;
+
+  setLoading(true);
   try {
-    const res  = await fetch(BIN_URL + '/latest', {
-      headers: { 'X-Master-Key': BIN_KEY }
+    if (!myId) throw new Error('Відкрий в Telegram!');
+
+    const cmdText = 'створити рп ' + name + ' | ' + text + ' | ' + selEmo;
+    const res = await fetch(API + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: myId, text: cmdText })
     });
     const data = await res.json();
-    const all  = data.record || {};
-    const uid  = myId || 'unknown';
-    const cmds = all[uid] || {};
-    const list = Object.entries(cmds);
-    document.getElementById('fcnt').textContent = list.length;
-    renderFeed(list);
+
+    if (data.ok) {
+      showToast('✅ Збережено! Пиши "' + name + '" в групі', 'success');
+      document.getElementById('f-name').value = '';
+      document.getElementById('f-text').value = '';
+      selEmo = null;
+      document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
+      document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля…</span>';
+      upBtn();
+    } else {
+      throw new Error(data.description || 'помилка');
+    }
   } catch(e) {
-    document.getElementById('feed-list').innerHTML =
-      '<div class="feed-empty"><div class="feed-empty-icon">❌</div><div>Помилка завантаження.<br>Натисни 🔄 Оновити</div></div>';
+    showToast('❌ ' + e.message, 'error');
+  } finally {
+    setLoading(false);
   }
 }
 
-function renderFeed(list) {
+// ===== ЗАВАНТАЖИТИ КОМАНДИ — питаємо бота =====
+async function loadCmds() {
+  document.getElementById('feed-list').innerHTML =
+    '<div class="loading-block"><div class="loading-spin"></div>Завантаження…</div>';
+
+  try {
+    if (!myId) throw new Error('no_id');
+
+    // 1. Відправляємо запит боту
+    await fetch(API + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: myId, text: 'мої рп json' })
+    });
+
+    // 2. Чекаємо 2 секунди
+    await new Promise(r => setTimeout(r, 2000));
+
+    // 3. Читаємо останні повідомлення
+    const res = await fetch(API + '/getUpdates?limit=20&timeout=0');
+    const data = await res.json();
+
+    if (!data.ok) throw new Error('API error');
+
+    // 4. Шукаємо повідомлення з RP_JSON від бота
+    let rpData = null;
+    const updates = data.result || [];
+    for (let i = updates.length - 1; i >= 0; i--) {
+      const msg = updates[i].message;
+      if (msg && msg.chat && String(msg.chat.id) === myId &&
+          msg.text && msg.text.startsWith('RP_JSON:')) {
+        try {
+          const jsonStr = msg.text.replace('RP_JSON:', '').trim();
+          rpData = JSON.parse(jsonStr);
+        } catch(e) {}
+        break;
+      }
+    }
+
+    if (!rpData) {
+      // Немає даних
+      renderFeed({});
+      return;
+    }
+
+    renderFeed(rpData);
+    document.getElementById('fcnt').textContent = Object.keys(rpData).length;
+
+  } catch(e) {
+    document.getElementById('feed-list').innerHTML =
+      '<div class="feed-empty"><div class="feed-empty-icon">❌</div><div>Помилка. Натисни 🔄</div></div>';
+  }
+}
+
+function renderFeed(cmds) {
   const el = document.getElementById('feed-list');
+  const list = Object.entries(cmds);
+  document.getElementById('fcnt').textContent = list.length;
+
   if (!list.length) {
     el.innerHTML = `<div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Ще немає команд.<br>Створи першу!</div></div>`;
     return;
@@ -251,94 +317,20 @@ function renderFeed(list) {
     </div>`).join('');
 }
 
-// ===== ЗБЕРЕГТИ =====
-async function saveCmd() {
-  const name = document.getElementById('f-name').value.trim().toLowerCase();
-  const text = document.getElementById('f-text').value.trim();
-  if (!name || !text || !selEmo) return;
-
-  setLoading(true);
-  try {
-    // 1. Відправляємо команду боту
-    if (myId) {
-      await fetch(BOT_API + '/sendMessage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: myId,
-          text: 'створити рп ' + name + ' | ' + text + ' | ' + selEmo
-        })
-      });
-    }
-
-    // 2. Зберігаємо в JSONBin
-    const getRes = await fetch(BIN_URL + '/latest', {
-      headers: { 'X-Master-Key': BIN_KEY }
-    });
-    const getData = await getRes.json();
-    const all = getData.record || {};
-    const uid = myId || 'unknown';
-    if (!all[uid]) all[uid] = {};
-    all[uid][name] = { text, emoji: selEmo, media: null };
-
-    await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': BIN_KEY
-      },
-      body: JSON.stringify(all)
-    });
-
-    showToast('✅ Збережено! Пиши "' + name + '" в групі', 'success');
-
-    // Скидаємо форму
-    document.getElementById('f-name').value = '';
-    document.getElementById('f-text').value = '';
-    selEmo = null;
-    document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
-    document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля…</span>';
-    upBtn();
-
-  } catch(e) {
-    showToast('❌ Помилка збереження', 'error');
-  } finally {
-    setLoading(false);
-  }
-}
-
-// ===== ВИДАЛИТИ =====
 async function deleteCmd(name) {
-  setLoading(true);
   try {
-    // 1. Відправляємо команду боту
     if (myId) {
-      await fetch(BOT_API + '/sendMessage', {
+      await fetch(API + '/sendMessage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ chat_id: myId, text: 'видалити рп ' + name })
       });
     }
-
-    // 2. Видаляємо з JSONBin
-    const getRes  = await fetch(BIN_URL + '/latest', { headers: { 'X-Master-Key': BIN_KEY } });
-    const getData = await getRes.json();
-    const all = getData.record || {};
-    const uid = myId || 'unknown';
-    if (all[uid]) delete all[uid][name];
-
-    await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': BIN_KEY },
-      body: JSON.stringify(all)
-    });
-
     showToast('🗑️ Видалено', 'success');
+    await new Promise(r => setTimeout(r, 1000));
     loadCmds();
   } catch(e) {
-    showToast('❌ Помилка видалення', 'error');
-  } finally {
-    setLoading(false);
+    showToast('❌ Помилка', 'error');
   }
 }
 
@@ -366,9 +358,31 @@ function showToast(msg, type='') {
 }
 
 // Завантажуємо кількість при старті
-loadCmds().then(() => {}).catch(() => {
-  document.getElementById('fcnt').textContent = '0';
-});
+if (myId) {
+  fetch(API + '/sendMessage', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: myId, text: 'мої рп json' })
+  }).then(() => new Promise(r => setTimeout(r, 2000)))
+  .then(() => fetch(API + '/getUpdates?limit=20&timeout=0'))
+  .then(r => r.json())
+  .then(data => {
+    const updates = data.result || [];
+    for (let i = updates.length - 1; i >= 0; i--) {
+      const msg = updates[i].message;
+      if (msg && msg.chat && String(msg.chat.id) === myId &&
+          msg.text && msg.text.startsWith('RP_JSON:')) {
+        try {
+          const rpData = JSON.parse(msg.text.replace('RP_JSON:', '').trim());
+          document.getElementById('fcnt').textContent = Object.keys(rpData).length;
+        } catch(e) {}
+        break;
+      }
+    }
+  }).catch(() => {
+    document.getElementById('fcnt').textContent = '0';
+  });
+}
 </script>
 </body>
 </html>
