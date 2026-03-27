@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Симон — РП</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Nunito:wght@400;600;700&display=swap');
   :root {
@@ -18,7 +19,7 @@
     background-image:linear-gradient(rgba(124,92,252,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.04) 1px,transparent 1px);
     background-size:40px 40px; pointer-events:none; z-index:0;
   }
-  .app { position:relative; z-index:1; max-width:480px; margin:0 auto; padding:16px 12px 100px; }
+  .app { position:relative; z-index:1; max-width:480px; margin:0 auto; padding:16px 12px 120px; }
 
   .header { display:flex; align-items:center; gap:10px; padding:16px 0 20px; }
   .hicon { width:44px; height:44px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:0 0 20px rgba(124,92,252,0.5); flex-shrink:0; }
@@ -32,37 +33,55 @@
   .block { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:12px; }
   .slabel { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
 
-  .field {
-    width:100%; background:var(--bg); border:1px solid var(--border);
-    border-radius:10px; padding:12px 14px; color:var(--text);
-    font-family:'Nunito',sans-serif; font-size:15px; font-weight:700;
-    outline:none; transition:border-color .2s; resize:none;
-  }
+  .field { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--text); font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; outline:none; transition:border-color .2s; }
   .field:focus { border-color:var(--accent); }
   .field::placeholder { color:var(--muted); font-weight:600; font-size:13px; }
 
-  /* Емодзі */
   .egrid { display:flex; flex-wrap:wrap; gap:8px; }
-  .ebtn {
-    width:44px; height:44px; border-radius:12px; border:1px solid var(--border);
-    background:var(--bg); font-size:22px; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition:all .15s; -webkit-tap-highlight-color:transparent;
-  }
+  .ebtn { width:44px; height:44px; border-radius:12px; border:1px solid var(--border); background:var(--bg); font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; -webkit-tap-highlight-color:transparent; }
   .ebtn.sel { border-color:var(--accent2); background:rgba(252,92,156,0.15); transform:scale(1.15); box-shadow:0 0 10px rgba(252,92,156,0.4); }
   .ebtn:active { transform:scale(0.88) !important; }
 
-  /* Превью */
-  .preview {
-    background:rgba(124,92,252,0.08); border:1px solid rgba(124,92,252,0.25);
-    border-radius:14px; padding:14px; margin-bottom:12px;
-    font-size:15px; font-weight:700; line-height:1.7; color:var(--text); min-height:54px;
-  }
+  .preview { background:rgba(124,92,252,0.08); border:1px solid rgba(124,92,252,0.25); border-radius:14px; padding:14px; margin-bottom:12px; font-size:15px; font-weight:700; line-height:1.7; color:var(--text); min-height:54px; }
   .preview .ph { color:var(--muted); font-weight:600; font-size:13px; }
 
-  .exec-btn { width:100%; padding:14px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border:none; border-radius:14px; color:#fff; font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(124,92,252,0.4); transition:all .2s; }
-  .exec-btn:active { transform:scale(0.97); }
-  .exec-btn:disabled { background:var(--border); box-shadow:none; color:var(--muted); cursor:not-allowed; transform:none; }
+  /* Кнопки дій */
+  .btn-row { display:flex; gap:8px; margin-bottom:0; }
+  .btn-send {
+    flex:1; padding:14px; background:linear-gradient(135deg,#22c55e,#16a34a);
+    border:none; border-radius:14px; color:#fff;
+    font-family:'Unbounded',sans-serif; font-size:12px; font-weight:700;
+    cursor:pointer; box-shadow:0 6px 20px rgba(34,197,94,0.4);
+    transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .btn-send:active { transform:scale(0.97); }
+  .btn-send:disabled { background:var(--border); box-shadow:none; color:var(--muted); cursor:not-allowed; transform:none; }
+
+  .btn-copy {
+    padding:14px 16px; background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; color:var(--text);
+    font-family:'Unbounded',sans-serif; font-size:11px; font-weight:700;
+    cursor:pointer; transition:all .2s;
+    display:flex; align-items:center; justify-content:center; gap:5px;
+  }
+  .btn-copy:active { transform:scale(0.97); }
+  .btn-copy:disabled { opacity:0.4; cursor:not-allowed; }
+
+  .btn-save {
+    width:100%; padding:11px; background:rgba(124,92,252,0.12);
+    border:1px solid var(--accent); border-radius:12px; color:var(--accent);
+    font-family:'Nunito',sans-serif; font-size:13px; font-weight:700;
+    cursor:pointer; transition:all .2s; margin-bottom:12px;
+  }
+  .btn-save:active { transform:scale(0.97); }
+  .btn-save:disabled { opacity:0.4; cursor:not-allowed; }
+
+  /* Інфо-блок */
+  .info-box {
+    background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.3);
+    border-radius:12px; padding:10px 14px; margin-bottom:12px;
+    font-size:12px; color:#86efac; line-height:1.5;
+  }
 
   /* Лента */
   .feed-empty { text-align:center; padding:50px 20px; color:var(--muted); }
@@ -73,8 +92,9 @@
   .rp-who { font-weight:700; font-size:13px; color:var(--accent); }
   .rp-when { font-size:11px; color:var(--muted); }
   .rp-body { font-size:15px; font-weight:700; line-height:1.6; }
-  .rp-btns { display:flex; gap:8px; margin-top:10px; }
-  .rbtn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:13px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; transition:all .15s; }
+  .rp-btns { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .rbtn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; transition:all .15s; }
+  .rbtn.green { border-color:#22c55e; color:#22c55e; background:rgba(34,197,94,0.1); }
   .rbtn.liked { border-color:var(--accent2); color:var(--accent2); background:rgba(252,92,156,0.1); }
 
   .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--accent); border-radius:12px; padding:10px 20px; font-size:13px; font-weight:700; opacity:0; transition:all .3s; z-index:100; white-space:nowrap; }
@@ -106,44 +126,52 @@
   <!-- CREATE -->
   <div id="page-create">
 
-    <!-- Хто -->
     <div class="block">
       <div class="slabel">👤 Твій нік</div>
       <input class="field" id="f-who" placeholder="Наприклад: Влад" oninput="upPrev()">
     </div>
 
-    <!-- Дія -->
     <div class="block">
       <div class="slabel">⚡ Дія</div>
       <input class="field" id="f-act" placeholder="Наприклад: вкусив, обіймає, штовхнув…" oninput="upPrev()">
     </div>
 
-    <!-- Ціль -->
     <div class="block">
       <div class="slabel">🎯 Ціль</div>
       <input class="field" id="f-target" placeholder="Наприклад: Валя, @user…" oninput="upPrev()">
     </div>
 
-    <!-- Текст -->
     <div class="block">
       <div class="slabel">✏️ Текст (необов'язково)</div>
       <input class="field" id="f-text" placeholder="Наприклад: кусь, ааа, хаха…" oninput="upPrev()">
     </div>
 
-    <!-- Емодзі -->
     <div class="block">
       <div class="slabel">😊 Емодзі</div>
       <div class="egrid" id="emo-grid"></div>
     </div>
 
-    <!-- Превью -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <div class="slabel" style="margin-bottom:0">👁 Превью</div>
-      <button onclick="upPrev()" style="background:rgba(124,92,252,0.15);border:1px solid var(--accent);border-radius:8px;padding:4px 10px;color:var(--accent);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">🎲 Інший варіант</button>
-    </div>
     <div class="preview" id="preview"><span class="ph">Заповни поля — тут з'явиться РП…</span></div>
 
-    <button class="exec-btn" id="exec-btn" onclick="doRp()" disabled>🎭 Виконати РП</button>
+    <!-- Інфо -->
+    <div class="info-box" id="info-box" style="display:none">
+      📤 Натисни <b>Відправити в чат</b> — обереш групу і бот відправить РП автоматично
+    </div>
+
+    <!-- Кнопки -->
+    <div class="btn-row" style="margin-bottom:8px">
+      <button class="btn-send" id="btn-send" onclick="sendToChat()" disabled>
+        📤 Відправити в чат
+      </button>
+      <button class="btn-copy" id="btn-copy" onclick="copyRpText()" disabled title="Копіювати текст">
+        📋
+      </button>
+    </div>
+
+    <button class="btn-save" id="btn-save" onclick="saveRp()" disabled>
+      💾 Зберегти в Мої РП
+    </button>
+
   </div>
 
   <!-- FEED -->
@@ -163,34 +191,41 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// Telegram WebApp init
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+}
+
 const EMOJIS = ['💕','🥰','😘','💋','🫂','❤️','👊','💥','⚔️','😤','🔥','💢','😡','🦵','💪','🌿','💊','🛏️','🌙','☕','🎉','😜','🎈','🥳','😂','💃','🕺','😢','😔','💔','😭','⚡','🎭','🌟','💫','🔮','🎯','🌀','👀','😏','🤗','🫶','✨','🩷','😈','🫠','🤭','💀','🐾','🌸'];
 
 let selEmo = null;
 let feed = [], lks = {};
 
-// Шаблони варіантів — {who}, {act}, {target}, {text} замінюються
 const VARIANTS = [
   '{emoji} {who} {act} {target} — {text}',
-  '{emoji} {who} раптово {act} {target}! {text}',
-  '✨ {who} ніжно {act} {target} {emoji} {text}',
-  '{who} підійшов до {target} і {act} {emoji} {text}',
-  '👀 {who} непомітно {act} {target}... {text} {emoji}',
-  '{who} з усмішкою {act} {target} {emoji} — {text}',
-  '💫 {who} {act} {target} і втік! {text} {emoji}',
-  '{who} несподівано {act} {target} {emoji} {text}',
-  '〔РП〕 {who} {act} {target} {emoji} {text}',
-  '{who} повільно {act} {target}... {text} {emoji}',
+  '{emoji} {who} {act} {target}',
+  '✨ {who} {act} {target} {emoji} — {text}',
+  '{who} підійшов до {target} і {act} {emoji}',
+  '👀 {who} непомітно {act} {target}... {emoji}',
+  '{who} з усмішкою {act} {target} {emoji}',
+  '💫 {who} {act} {target} і втік! {emoji}',
+  '{who} несподівано {act} {target} {emoji}',
+  '〔РП〕 {who} {act} {target} {emoji}',
 ];
 
 function pickVariant(who, act, target, text, emoji) {
   const tpl = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
-  return tpl
+  let res = tpl
     .replace('{who}', who)
     .replace('{act}', act)
     .replace('{target}', target)
     .replace('{text}', text || '')
-    .replace('{emoji}', emoji)
-    .replace(/\s{2,}/g, ' ').trim();
+    .replace('{emoji}', emoji);
+  // Прибираємо порожній " — " якщо нема тексту
+  res = res.replace(/\s*—\s*$/, '').replace(/\s{2,}/g, ' ').trim();
+  return res;
 }
 
 // Рендер емодзі
@@ -203,7 +238,16 @@ function pickEmo(e, btn) {
   document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
   upPrev();
-  upBtn();
+  upBtns();
+}
+
+function getPlainText() {
+  const who    = document.getElementById('f-who').value.trim();
+  const act    = document.getElementById('f-act').value.trim();
+  const target = document.getElementById('f-target').value.trim();
+  const text   = document.getElementById('f-text').value.trim();
+  if (!who || !act || !target || !selEmo) return '';
+  return pickVariant(who, act, target, text, selEmo);
 }
 
 function upPrev() {
@@ -211,39 +255,73 @@ function upPrev() {
   const act    = document.getElementById('f-act').value.trim();
   const target = document.getElementById('f-target').value.trim();
   const text   = document.getElementById('f-text').value.trim();
-  const emo    = selEmo || '';
+  const box    = document.getElementById('preview');
 
-  if (!who && !act && !target) {
-    document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля — тут з\'явиться РП…</span>';
-    upBtn(); return;
+  if (!who || !act || !target) {
+    box.innerHTML = '<span class="ph">Заповни поля — тут з\'явиться РП…</span>';
+    upBtns(); return;
   }
 
-  if (!who || !act || !target || !emo) {
-    let parts = [];
-    if (who)    parts.push(`<b style="color:var(--accent)">${who}</b>`);
-    if (act)    parts.push(`<span>${act}</span>`);
-    if (target) parts.push(`<b style="color:var(--accent2)">${target}</b>`);
-    if (text)   parts.push(`— <em style="color:#aaa">${text}</em>`);
-    if (emo)    parts.push(emo);
-    document.getElementById('preview').innerHTML = parts.join(' ') || '<span class="ph">Заповни поля — тут з\'явиться РП…</span>';
-    upBtn(); return;
-  }
-  const raw = pickVariant(who, act, target, text, emo);
-  const hi = raw
-    .replace(new RegExp(who.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')), `<b style="color:var(--accent)">${who}</b>`)
-    .replace(new RegExp(target.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')), `<b style="color:var(--accent2)">${target}</b>`);
-  document.getElementById('preview').innerHTML = hi;
-  upBtn();
+  const emo = selEmo || '…';
+  const variant = pickVariant(who, act, target, text, emo);
+  box.textContent = variant;
+  upBtns();
 }
 
-function upBtn() {
+function upBtns() {
   const who    = document.getElementById('f-who').value.trim();
   const act    = document.getElementById('f-act').value.trim();
   const target = document.getElementById('f-target').value.trim();
-  document.getElementById('exec-btn').disabled = !(who && act && target && selEmo);
+  const ok     = !!(who && act && target && selEmo);
+
+  document.getElementById('btn-send').disabled = !ok;
+  document.getElementById('btn-copy').disabled = !ok;
+  document.getElementById('btn-save').disabled = !ok;
+  document.getElementById('info-box').style.display = ok ? '' : 'none';
 }
 
-function doRp() {
+// ===== ВІДПРАВИТИ В ЧАТ (inline) =====
+function sendToChat() {
+  const plain = getPlainText();
+  if (!plain) return;
+
+  if (tg && tg.switchInlineQuery) {
+    // Відправляємо через inline — юзер обирає групу
+    tg.switchInlineQuery(plain, ['groups', 'channels']);
+  } else {
+    // Fallback — копіюємо
+    copyText(plain);
+    showToast('📋 Скопійовано! Вставте в чат');
+  }
+}
+
+// ===== КОПІЮВАТИ =====
+function copyRpText() {
+  const plain = getPlainText();
+  if (!plain) return;
+  copyText(plain);
+  showToast('📋 Скопійовано!');
+}
+
+function copyText(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
+
+// ===== ЗБЕРЕГТИ =====
+function saveRp() {
   const who    = document.getElementById('f-who').value.trim();
   const act    = document.getElementById('f-act').value.trim();
   const target = document.getElementById('f-target').value.trim();
@@ -253,61 +331,61 @@ function doRp() {
   const now  = new Date();
   const time = now.toLocaleTimeString('uk-UA', {hour:'2-digit', minute:'2-digit'});
   const id   = Date.now();
+  const plain = getPlainText();
 
-  const variant = pickVariant(who, act, target, text, selEmo);
-  feed.unshift({ id, who, act, target, text, emoji: selEmo, time, variant });
+  feed.unshift({ id, who, act, target, text, emoji: selEmo, time, plain });
   lks[id] = false;
   document.getElementById('fcnt').textContent = feed.length;
-  showToast(selEmo + ' РП виконано!');
-
-  // Скинути
-  document.getElementById('f-act').value = '';
-  document.getElementById('f-target').value = '';
-  document.getElementById('f-text').value = '';
-  selEmo = null;
-  document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
-  upPrev();
+  showToast('💾 Збережено в Мої РП!');
 }
 
 function renderFeed() {
   const el = document.getElementById('feed-list');
   if (!feed.length) {
-    el.innerHTML = '<div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Поки порожньо.<br>Виконай першу РП!</div></div>';
+    el.innerHTML = `<div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Поки порожньо.<br>Виконай першу РП!</div></div>`;
     return;
   }
-  el.innerHTML = feed.map(r => {
-    let body = r.variant
-      .replace(new RegExp(r.who.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')), `<b style="color:var(--accent)">${r.who}</b>`)
-      .replace(new RegExp(r.target.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')), `<b style="color:var(--accent2)">${r.target}</b>`);
-    return `
-      <div class="rp-item">
-        <div class="rp-top"><span class="rp-who">${r.who}</span><span class="rp-when">${r.time}</span></div>
-        <div class="rp-body">${body}</div>
-        <div class="rp-btns">
-          <button class="rbtn ${lks[r.id]?'liked':''}" onclick="likeRp(${r.id})">❤️ ${lks[r.id]?1:0}</button>
-          <button class="rbtn" onclick="copyRp(${r.id})">📋 Копія</button>
-          <button class="rbtn" onclick="delRp(${r.id})">🗑️</button>
-        </div>
-      </div>`;
-  }).join('');
+  el.innerHTML = feed.map(r => `
+    <div class="rp-item">
+      <div class="rp-top"><span class="rp-who">${r.who}</span><span class="rp-when">${r.time}</span></div>
+      <div class="rp-body">${r.plain}</div>
+      <div class="rp-btns">
+        <button class="rbtn green" onclick="sendSaved(${r.id})">📤 В чат</button>
+        <button class="rbtn" onclick="copySaved(${r.id})">📋 Копія</button>
+        <button class="rbtn ${lks[r.id]?'liked':''}" onclick="likeRp(${r.id})">❤️ ${lks[r.id]?1:0}</button>
+        <button class="rbtn" onclick="delRp(${r.id})">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function sendSaved(id) {
+  const r = feed.find(x => x.id === id);
+  if (!r) return;
+  if (tg && tg.switchInlineQuery) {
+    tg.switchInlineQuery(r.plain, ['groups', 'channels']);
+  } else {
+    copyText(r.plain);
+    showToast('📋 Скопійовано! Вставте в чат');
+  }
+}
+
+function copySaved(id) {
+  const r = feed.find(x => x.id === id);
+  if (!r) return;
+  copyText(r.plain);
+  showToast('📋 Скопійовано!');
 }
 
 function likeRp(id) { lks[id]=!lks[id]; renderFeed(); }
-function copyRp(id) {
-  const r = feed.find(x=>x.id===id); if(!r) return;
-  const s = r.variant;
-  if (navigator.clipboard) navigator.clipboard.writeText(s).then(()=>showToast('📋 Скопійовано!'));
-  else showToast(s);
-}
 function delRp(id) { feed=feed.filter(x=>x.id!==id); delete lks[id]; document.getElementById('fcnt').textContent=feed.length; renderFeed(); }
 
 function switchTab(tab) {
   document.getElementById('page-create').style.display = tab==='create' ? '' : 'none';
   document.getElementById('page-feed').style.display   = tab==='feed'   ? '' : 'none';
-  ['create','feed'].forEach(t => {
-    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
-    document.getElementById('nav-'+t).classList.toggle('active', t===tab);
-  });
+  document.getElementById('tab-create').classList.toggle('active', tab==='create');
+  document.getElementById('tab-feed').classList.toggle('active', tab==='feed');
+  document.getElementById('nav-create').classList.toggle('active', tab==='create');
+  document.getElementById('nav-feed').classList.toggle('active', tab==='feed');
   if (tab==='feed') renderFeed();
 }
 
@@ -317,8 +395,13 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'),2000);
 }
 
-// Дефолтний нік
-document.getElementById('f-who').value = 'Влад';
+// Дефолтний нік з Telegram
+if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  const u = tg.initDataUnsafe.user;
+  document.getElementById('f-who').value = u.first_name || 'Влад';
+} else {
+  document.getElementById('f-who').value = 'Влад';
+}
 </script>
 </body>
 </html>
