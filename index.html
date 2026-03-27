@@ -15,286 +15,307 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .page.active{display:block;}
 .nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,15,26,0.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 10px;background:none;border:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;position:relative;}
-.nav-btn span.icon{font-size:22px;}
+.nav-btn .icon{font-size:22px;}
 .nav-btn.active{color:var(--accent);}
 .nav-btn.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:32px;height:2px;background:var(--accent);border-radius:0 0 4px 4px;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:12px;}
-.section-title{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
+.stitle{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
 .btn{width:100%;padding:13px;border:none;border-radius:12px;color:#fff;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;}
+.btn:last-child{margin-bottom:0;}
 .btn:active{transform:scale(0.97);}
 .btn-accent{background:linear-gradient(135deg,var(--accent),#5a3dc4);box-shadow:0 4px 14px rgba(124,92,252,0.3);}
 .btn-green{background:linear-gradient(135deg,var(--green),#16a34a);box-shadow:0 4px 14px rgba(34,197,94,0.25);}
-.btn-pink{background:linear-gradient(135deg,var(--accent2),#c026d3);box-shadow:0 4px 14px rgba(252,92,156,0.3);}
-.btn-gold{background:linear-gradient(135deg,var(--gold),#d97706);box-shadow:0 4px 14px rgba(245,158,11,0.3);}
+.btn-pink{background:linear-gradient(135deg,var(--accent2),#c026d3);}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#d97706);}
 .btn-red{background:linear-gradient(135deg,var(--red),#b91c1c);}
 .btn-gray{background:var(--card);color:var(--muted);border:1px solid var(--border);box-shadow:none;}
 .btn:disabled{background:var(--border);box-shadow:none;color:var(--muted);cursor:not-allowed;transform:none;}
-.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.action-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;color:var(--text);border:none;}
-.action-btn:active{transform:scale(0.94);}
-.action-btn .aicon{font-size:28px;}
-.action-btn .albl{font-size:12px;font-weight:800;}
-.action-btn .asub{font-size:10px;color:var(--muted);}
 .field{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;outline:none;transition:border-color .2s;margin-bottom:8px;}
 .field:focus{border-color:var(--accent);}
 .field::placeholder{color:var(--muted);font-size:13px;font-weight:600;}
 .hint{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5;}
 .hint b{color:var(--accent2);}
-/* Profile */
-.profile-hero{background:linear-gradient(135deg,#1a1040,#2d1b6e);border:1px solid rgba(124,92,252,0.3);border-radius:20px;padding:20px;margin-bottom:12px;text-align:center;}
+.tab-row{display:flex;background:var(--surface);border-radius:12px;padding:3px;gap:3px;margin-bottom:12px;border:1px solid var(--border);}
+.tab-btn{flex:1;padding:8px 4px;border-radius:9px;border:none;background:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+.tab-btn.active{background:var(--accent);color:#fff;}
+.badge{display:inline-flex;background:var(--accent2);color:#fff;font-size:9px;font-weight:900;padding:1px 5px;border-radius:5px;margin-left:3px;vertical-align:middle;}
+
+/* PROFILE */
+.hero{background:linear-gradient(135deg,#1a1040,#2d1b6e);border:1px solid rgba(124,92,252,0.3);border-radius:20px;padding:20px;margin-bottom:12px;text-align:center;}
 .avatar{width:72px;height:72px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 10px;box-shadow:0 0 24px rgba(124,92,252,0.4);}
-.profile-name{font-family:'Unbounded',sans-serif;font-size:17px;font-weight:900;margin-bottom:4px;}
-.profile-sub{font-size:13px;color:rgba(255,255,255,0.6);}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;}
-.stat-val{font-family:'Unbounded',sans-serif;font-size:22px;font-weight:900;margin-bottom:4px;}
-.stat-lbl{font-size:11px;color:var(--muted);font-weight:700;}
+.pname{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;margin-bottom:4px;}
+.psub{font-size:12px;color:rgba(255,255,255,0.55);}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;}
+.sv{font-family:'Unbounded',sans-serif;font-size:22px;font-weight:900;margin-bottom:4px;}
+.sl{font-size:11px;color:var(--muted);font-weight:700;}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.ab{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;color:var(--text);}
+.ab:active{transform:scale(0.93);}
+.ab .ai{font-size:26px;}
+.ab .al{font-size:12px;font-weight:800;}
+.ab .as{font-size:10px;color:var(--muted);}
+
+/* GAMES */
+.dice-result{font-family:'Unbounded',sans-serif;font-size:48px;text-align:center;padding:20px 0;min-height:90px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.coin-result{font-size:64px;text-align:center;padding:20px 0;min-height:90px;display:flex;align-items:center;justify-content:center;}
+.rps-row{display:flex;gap:10px;margin-bottom:12px;}
+.rps-btn{flex:1;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 8px;font-size:28px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.rps-btn span{font-size:11px;color:var(--muted);font-weight:700;}
+.rps-btn:active{transform:scale(0.93);}
+.rps-btn.chosen{border-color:var(--accent);background:rgba(124,92,252,0.15);}
+.game-result{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;font-size:15px;font-weight:700;min-height:60px;}
+
 /* RP */
 .egrid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
 .ebtn{width:42px;height:42px;border-radius:10px;border:1px solid var(--border);background:var(--bg);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;-webkit-tap-highlight-color:transparent;}
 .ebtn.sel{border-color:var(--accent2);background:rgba(252,92,156,0.15);transform:scale(1.12);box-shadow:0 0 8px rgba(252,92,156,0.4);}
-.preview-box{background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2);border-radius:12px;padding:12px;min-height:46px;font-size:14px;font-weight:700;line-height:1.6;margin-bottom:10px;}
-.preview-box .ph{color:var(--muted);font-size:13px;font-weight:600;}
-.rp-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;animation:fin .3s ease;}
-@keyframes fin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.prev-box{background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2);border-radius:12px;padding:12px;min-height:46px;font-size:14px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.prev-box .ph{color:var(--muted);font-size:13px;font-weight:600;}
+.rp-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;}
 .rp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
-.rp-name{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:var(--accent);}
-.rp-text{font-size:12px;color:#c8cbf0;margin-bottom:6px;}
+.rp-nm{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:var(--accent);}
+.rp-tx{font-size:12px;color:#c8cbf0;margin-bottom:6px;}
 .rp-del{background:rgba(239,68,68,0.1);border:1px solid var(--red);border-radius:7px;padding:4px 10px;color:var(--red);font-size:11px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
-/* Tab switcher */
-.tab-row{display:flex;background:var(--surface);border-radius:12px;padding:3px;gap:3px;margin-bottom:14px;border:1px solid var(--border);}
-.tab-btn{flex:1;padding:8px 4px;border-radius:9px;border:none;background:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
-.tab-btn.active{background:var(--accent);color:#fff;}
-/* Spinner */
+.builtin-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all .15s;}
+.builtin-item:active{transform:scale(0.98);}
+.builtin-name{font-weight:800;font-size:13px;}
+.builtin-copy{font-size:11px;color:var(--muted);background:var(--bg);border-radius:6px;padding:3px 8px;}
 .sp{display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-/* Toast */
+
+/* NOTES */
+.note-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;}
+.note-text{font-size:13px;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;}
+.note-date{font-size:10px;color:var(--muted);}
+.note-del{background:rgba(239,68,68,0.1);border:1px solid var(--red);border-radius:7px;padding:3px 10px;color:var(--red);font-size:11px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
+textarea.field{resize:none;min-height:90px;font-size:13px;}
+
+/* CALC */
+.calc-box{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;text-align:center;}
+.calc-val{font-family:'Unbounded',sans-serif;font-size:32px;font-weight:900;color:var(--accent);margin-bottom:4px;}
+.calc-lbl{font-size:12px;color:var(--muted);}
+.calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;}
+.calc-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 8px;font-family:'Unbounded',sans-serif;font-size:16px;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s;}
+.calc-btn:active{transform:scale(0.93);}
+.calc-btn.op{color:var(--accent);}
+.calc-btn.eq{background:var(--accent);color:#fff;border-color:var(--accent);}
+.calc-btn.cl{color:var(--red);}
+
+/* TOAST */
 .toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:10px 18px;font-size:13px;font-weight:700;opacity:0;transition:all .25s;z-index:200;white-space:nowrap;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.ok{border-color:var(--green);}
 .toast.err{border-color:var(--red);}
-.badge{display:inline-flex;background:var(--accent2);color:#fff;font-size:9px;font-weight:900;padding:1px 5px;border-radius:5px;margin-left:3px;vertical-align:middle;}
-.divider{height:1px;background:var(--border);margin:12px 0;}
 </style>
 </head>
 <body>
 
 <!-- PAGE: PROFILE -->
 <div class="page active" id="p-profile">
-  <div class="profile-hero">
+  <div class="hero">
     <div class="avatar" id="av">👤</div>
-    <div class="profile-name" id="pr-name">—</div>
-    <div class="profile-sub">Симон v4.0</div>
+    <div class="pname" id="pr-name">—</div>
+    <div class="psub">Симон v4.0</div>
   </div>
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-val" id="pr-coins">—</div><div class="stat-lbl">💰 Монет</div></div>
-    <div class="stat-card"><div class="stat-val" id="pr-xp">—</div><div class="stat-lbl">⚡ XP</div></div>
-    <div class="stat-card"><div class="stat-val" id="pr-wins">—</div><div class="stat-lbl">🏆 Перемог</div></div>
-    <div class="stat-card"><div class="stat-val" id="pr-streak">—</div><div class="stat-lbl">🌾 Стрік</div></div>
+  <div class="sg">
+    <div class="sc"><div class="sv">💰</div><div class="sl">Монети</div></div>
+    <div class="sc"><div class="sv">⚡</div><div class="sl">XP</div></div>
+    <div class="sc"><div class="sv">🏆</div><div class="sl">Перемог</div></div>
+    <div class="sc"><div class="sv">🌾</div><div class="sl">Стрік фарму</div></div>
   </div>
   <div class="card">
-    <div class="section-title">⚡ Швидкі дії</div>
-    <div class="action-grid">
-      <button class="action-btn" style="background:linear-gradient(135deg,#1a2e1a,#143d14);border-radius:14px" onclick="send('фарм')">
-        <span class="aicon">🌾</span><span class="albl">Фарм</span><span class="asub">кд 4 год</span>
+    <div class="stitle">⚡ Швидкі дії</div>
+    <div class="ag">
+      <button class="ab" style="background:linear-gradient(135deg,#1a2e1a,#143d14);border-radius:14px" onclick="send('фарм')">
+        <span class="ai">🌾</span><span class="al">Фарм</span><span class="as">кд 4 год</span>
       </button>
-      <button class="action-btn" style="background:linear-gradient(135deg,#1a1a2e,#14143d);border-radius:14px" onclick="send('щоденний бонус')">
-        <span class="aicon">🎁</span><span class="albl">Бонус</span><span class="asub">щодня</span>
+      <button class="ab" style="background:linear-gradient(135deg,#1a1a2e,#14143d);border-radius:14px" onclick="send('щоденний бонус')">
+        <span class="ai">🎁</span><span class="al">Бонус</span><span class="as">щодня</span>
       </button>
-      <button class="action-btn" style="background:linear-gradient(135deg,#2e1a1a,#3d1414);border-radius:14px" onclick="send('відсотки')">
-        <span class="aicon">📈</span><span class="albl">Відсотки</span><span class="asub">банк +3%</span>
+      <button class="ab" style="background:linear-gradient(135deg,#2e1a1a,#3d1414);border-radius:14px" onclick="send('відсотки')">
+        <span class="ai">📈</span><span class="al">Відсотки</span><span class="as">банк +3%</span>
       </button>
-      <button class="action-btn" style="background:linear-gradient(135deg,#2e2a1a,#3d3414);border-radius:14px" onclick="send('рулетка 50')">
-        <span class="aicon">🎰</span><span class="albl">Рулетка</span><span class="asub">50 монет</span>
+      <button class="ab" style="background:linear-gradient(135deg,#2e2a1a,#3d3414);border-radius:14px" onclick="send('рулетка 50')">
+        <span class="ai">🎰</span><span class="al">Рулетка</span><span class="as">50 монет</span>
       </button>
     </div>
   </div>
   <div class="card">
-    <div class="section-title">📊 Оновити дані профілю</div>
-    <p class="hint">Натисни кнопку — бот надішле твої дані в чат і вони відобразяться тут</p>
-    <button class="btn btn-accent" onclick="syncProfile()">
-      <span class="sp" id="sync-sp"></span>
-      <span id="sync-lbl">🔄 Синхронізувати</span>
-    </button>
-  </div>
-</div>
-
-<!-- PAGE: ECONOMY -->
-<div class="page" id="p-economy">
-  <div class="card">
-    <div class="section-title">💸 Переказ монет</div>
+    <div class="stitle">💸 Переказ монет</div>
     <input class="field" id="tr-id" placeholder="ID отримувача" type="number">
     <input class="field" id="tr-amount" placeholder="Сума монет" type="number">
     <button class="btn btn-green" onclick="doTransfer()">💸 Переказати</button>
   </div>
   <div class="card">
-    <div class="section-title">🏦 Банк</div>
+    <div class="stitle">🏦 Банк</div>
     <input class="field" id="bank-amount" placeholder="Сума монет" type="number">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <button class="btn btn-accent" style="margin:0" onclick="doBankAction('покласти')">📥 Покласти</button>
       <button class="btn btn-red" style="margin:0" onclick="doBankAction('зняти')">📤 Зняти</button>
     </div>
   </div>
-  <div class="card">
-    <div class="section-title">🎮 Міні-ігри</div>
-    <div class="action-grid">
-      <button class="action-btn" style="background:var(--card);border-radius:14px;border:1px solid var(--border)" onclick="send('кубик')">
-        <span class="aicon">🎲</span><span class="albl">Кубик</span>
-      </button>
-      <button class="action-btn" style="background:var(--card);border-radius:14px;border:1px solid var(--border)" onclick="send('монета')">
-        <span class="aicon">🪙</span><span class="albl">Монета</span>
-      </button>
-      <button class="action-btn" style="background:var(--card);border-radius:14px;border:1px solid var(--border)" onclick="send('факт')">
-        <span class="aicon">🧠</span><span class="albl">Факт</span>
-      </button>
-      <button class="action-btn" style="background:var(--card);border-radius:14px;border:1px solid var(--border)" onclick="send('цитата')">
-        <span class="aicon">💫</span><span class="albl">Цитата</span>
-      </button>
+</div>
+
+<!-- PAGE: GAMES -->
+<div class="page" id="p-games">
+  <div class="tab-row">
+    <button class="tab-btn active" onclick="switchGameTab('dice',this)">🎲 Кубик</button>
+    <button class="tab-btn" onclick="switchGameTab('coin',this)">🪙 Монета</button>
+    <button class="tab-btn" onclick="switchGameTab('rps',this)">✊ КНП</button>
+    <button class="tab-btn" onclick="switchGameTab('calc',this)">📊 Calc</button>
+  </div>
+
+  <!-- DICE -->
+  <div id="game-dice">
+    <div class="card">
+      <div class="stitle">🎲 Кубик</div>
+      <div class="dice-result" id="dice-res">—</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <button class="btn btn-accent" style="margin:0" onclick="rollDice(1)">×1</button>
+        <button class="btn btn-accent" style="margin:0" onclick="rollDice(2)">×2</button>
+        <button class="btn btn-accent" style="margin:0" onclick="rollDice(3)">×3</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stitle">🎲 Число від до</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <input class="field" id="rnd-min" placeholder="Від" type="number" value="1" style="margin:0">
+        <input class="field" id="rnd-max" placeholder="До" type="number" value="100" style="margin:0">
+      </div>
+      <button class="btn btn-green" onclick="rollRandom()">🎯 Випадкове число</button>
+      <div class="dice-result" id="rnd-res" style="font-size:36px">—</div>
     </div>
   </div>
-  <div class="card">
-    <div class="section-title">🎰 Лотерея</div>
-    <button class="btn btn-gold" onclick="send('купити квиток')">🎫 Купити квиток (50 💰)</button>
-    <button class="btn btn-gray" onclick="send('лотерея')">📊 Стан лотереї</button>
+
+  <!-- COIN -->
+  <div id="game-coin" style="display:none">
+    <div class="card">
+      <div class="stitle">🪙 Орел чи решка</div>
+      <div class="coin-result" id="coin-res">🪙</div>
+      <button class="btn btn-gold" onclick="flipCoin()">🪙 Підкинути монету</button>
+    </div>
+    <div class="card">
+      <div class="stitle">🔮 Магічна куля</div>
+      <input class="field" id="ball-q" placeholder="Задай питання…">
+      <button class="btn btn-accent" onclick="magicBall()">🎱 Запитати кулю</button>
+      <div class="game-result" id="ball-res" style="display:none"></div>
+    </div>
+    <div class="card">
+      <div class="stitle">📊 Інфа %</div>
+      <input class="field" id="info-q" placeholder="Тема для перевірки…">
+      <button class="btn btn-pink" onclick="infoCheck()">📊 Перевірити</button>
+      <div class="game-result" id="info-res" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- RPS -->
+  <div id="game-rps" style="display:none">
+    <div class="card">
+      <div class="stitle">✊ Камінь-Ножиці-Папір</div>
+      <div class="rps-row">
+        <button class="rps-btn" id="rps-rock" onclick="playRps('rock')">✊<span>Камінь</span></button>
+        <button class="rps-btn" id="rps-scissors" onclick="playRps('scissors')">✂️<span>Ножиці</span></button>
+        <button class="rps-btn" id="rps-paper" onclick="playRps('paper')">🖐<span>Папір</span></button>
+      </div>
+      <div class="game-result" id="rps-res">Обери свій варіант!</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+        <div class="sc"><div class="sv" id="rps-w">0</div><div class="sl">Перемог</div></div>
+        <div class="sc"><div class="sv" id="rps-d">0</div><div class="sl">Нічия</div></div>
+        <div class="sc"><div class="sv" id="rps-l">0</div><div class="sl">Поразок</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALC -->
+  <div id="game-calc" style="display:none">
+    <div class="card">
+      <div class="stitle">💱 Конвертер XP ↔ Монети</div>
+      <div class="calc-box">
+        <div class="calc-val" id="calc-val">0</div>
+        <div class="calc-lbl" id="calc-lbl">Введи суму</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <button class="btn btn-accent" style="margin:0" onclick="calcConvert('xp2coins')">⚡ XP → 💰</button>
+        <button class="btn btn-green" style="margin:0" onclick="calcConvert('coins2xp')">💰 → ⚡ XP</button>
+      </div>
+      <input class="field" id="calc-input" placeholder="Введи кількість…" type="number">
+      <div class="game-result" id="calc-res" style="display:none"></div>
+    </div>
+    <div class="card">
+      <div class="stitle">📊 Скільки потрібно</div>
+      <p class="hint">Введи суму щоб дізнатись скільки фармів треба</p>
+      <input class="field" id="farm-goal" placeholder="Ціль (монети)" type="number">
+      <button class="btn btn-gold" onclick="calcFarms()">🌾 Порахувати</button>
+      <div class="game-result" id="farm-res" style="display:none"></div>
+    </div>
   </div>
 </div>
 
-<!-- PAGE: SOCIAL -->
-<div class="page" id="p-social">
+<!-- PAGE: RP -->
+<div class="page" id="p-rp">
   <div class="tab-row">
-    <button class="tab-btn active" onclick="switchSocTab('rp',this)">🎭 РП</button>
-    <button class="tab-btn" onclick="switchSocTab('marry',this)">💍 Шлюб</button>
-    <button class="tab-btn" onclick="switchSocTab('rep',this)">⭐ Реп</button>
+    <button class="tab-btn active" onclick="switchRpTab('my',this)">🎭 Мої РП</button>
+    <button class="tab-btn" onclick="switchRpTab('builtin',this)">📋 Вбудовані</button>
   </div>
 
-  <!-- RP TAB -->
-  <div id="soc-rp">
+  <!-- MY RP -->
+  <div id="rp-my">
     <div class="tab-row">
-      <button class="tab-btn active" onclick="switchRpTab('create',this)" id="rp-t-create">➕ Нова</button>
-      <button class="tab-btn" onclick="switchRpTab('list',this)" id="rp-t-list">📜 Мої РП <span class="badge" id="rp-cnt">0</span></button>
+      <button class="tab-btn active" onclick="switchMyRp('create',this)">➕ Нова</button>
+      <button class="tab-btn" onclick="switchMyRp('list',this)">📜 Список <span class="badge" id="rp-cnt">0</span></button>
     </div>
-    <div id="rp-create-box">
+    <div id="rp-create">
       <div class="card">
-        <div class="section-title">🏷️ Назва команди</div>
+        <div class="stitle">🏷️ Назва</div>
         <input class="field" id="rp-name" placeholder="кусь, обійми, атака…" oninput="upRpPrev()">
-        <div class="hint">Пишеш це слово в групі щоб викликати РП</div>
       </div>
       <div class="card">
-        <div class="section-title">✏️ Текст РП</div>
+        <div class="stitle">✏️ Текст</div>
         <input class="field" id="rp-text" placeholder="{від} вкусив {до} за вухо" oninput="upRpPrev()">
-        <div class="hint"><b>{від}</b> — твоє ім'я &nbsp;|&nbsp; <b>{до}</b> — ціль (reply)</div>
+        <div class="hint"><b>{від}</b> — ти &nbsp;|&nbsp; <b>{до}</b> — ціль (reply)</div>
       </div>
       <div class="card">
-        <div class="section-title">😊 Емодзі</div>
+        <div class="stitle">😊 Емодзі</div>
         <div class="egrid" id="emo-grid"></div>
       </div>
       <div class="card" style="margin-bottom:10px">
-        <div class="section-title">👁 Превью</div>
-        <div class="preview-box" id="rp-prev"><span class="ph">Заповни поля…</span></div>
+        <div class="stitle">👁 Превью</div>
+        <div class="prev-box" id="rp-prev"><span class="ph">Заповни поля…</span></div>
       </div>
       <button class="btn btn-green" id="rp-save-btn" onclick="saveRp()" disabled>
         <span class="sp" id="rp-sp"></span>
         <span id="rp-save-lbl">💾 Зберегти в бота</span>
       </button>
     </div>
-    <div id="rp-list-box" style="display:none">
+    <div id="rp-list" style="display:none">
       <div id="rp-items"></div>
     </div>
   </div>
 
-  <!-- MARRY TAB -->
-  <div id="soc-marry" style="display:none">
-    <div class="card">
-      <div class="section-title">💍 Шлюб</div>
-      <p class="hint">Зроби reply на повідомлення партнера в груповому чаті і натисни кнопку</p>
-      <button class="btn btn-pink" onclick="send('одружитись')">💍 Запропонувати шлюб</button>
-      <button class="btn btn-gray" onclick="send('шлюб')">📋 Мій шлюб</button>
-      <button class="btn btn-red" onclick="send('розлучитись')">💔 Розлучитись</button>
-    </div>
-    <div class="card">
-      <div class="section-title">💕 Пара та сумісність</div>
-      <button class="btn btn-pink" onclick="send('пара дня')">💕 Пара дня</button>
-      <button class="btn btn-accent" onclick="send('топ пари')">👑 Топ пари</button>
-      <p class="hint" style="margin-top:4px">Для сумісності — reply на юзера і напиши "сумісність з" в чаті</p>
-    </div>
-    <div class="card">
-      <div class="section-title">👫 Стосунки</div>
-      <button class="btn btn-green" onclick="send('дружити з')">👫 Дружити (reply)</button>
-      <button class="btn btn-red" onclick="send('посваритись з')">⚔️ Посваритись (reply)</button>
-    </div>
-  </div>
-
-  <!-- REP TAB -->
-  <div id="soc-rep" style="display:none">
-    <div class="card">
-      <div class="section-title">⭐ Репутація</div>
-      <p class="hint">Зроби reply на юзера в груповому чаті і натисни кнопку</p>
-      <button class="btn btn-green" onclick="send('+реп')">⭐ Дати репутацію (reply)</button>
-      <button class="btn btn-red" onclick="send('-реп')">💔 Зняти репутацію (reply)</button>
-      <button class="btn btn-gray" onclick="send('реп')">📊 Моя репутація</button>
-      <button class="btn btn-accent" onclick="send('топ репутації')">👑 Топ репутації</button>
-    </div>
+  <!-- BUILTIN RP -->
+  <div id="rp-builtin" style="display:none">
+    <p class="hint" style="margin-bottom:10px">Натисни на команду — скопіюється. Вставте в груповий чат + reply</p>
+    <div id="builtin-list"></div>
   </div>
 </div>
 
-<!-- PAGE: MORE -->
-<div class="page" id="p-more">
+<!-- PAGE: NOTES -->
+<div class="page" id="p-notes">
   <div class="card">
-    <div class="section-title">👹 Бос-файт</div>
-    <div class="action-grid">
-      <button class="action-btn" style="background:linear-gradient(135deg,#2e1a1a,#3d1414);border-radius:14px" onclick="send('покликати боса')">
-        <span class="aicon">👹</span><span class="albl">Покликати</span>
-      </button>
-      <button class="action-btn" style="background:linear-gradient(135deg,#2e1a1a,#3d1414);border-radius:14px" onclick="send('атакувати')">
-        <span class="aicon">⚔️</span><span class="albl">Атакувати</span>
-      </button>
-      <button class="action-btn" style="background:linear-gradient(135deg,#2e1a1a,#3d1414);border-radius:14px" onclick="send('магія')">
-        <span class="aicon">🔮</span><span class="albl">Магія</span>
-      </button>
-      <button class="action-btn" style="background:linear-gradient(135deg,#2e1a1a,#3d1414);border-radius:14px" onclick="send('важкий удар')">
-        <span class="aicon">🪓</span><span class="albl">Важкий удар</span>
-      </button>
-    </div>
-    <button class="btn btn-gray" onclick="send('бос')">📊 Стан боса</button>
+    <div class="stitle">📝 Нова нотатка</div>
+    <textarea class="field" id="note-text" placeholder="Напиши щось…"></textarea>
+    <button class="btn btn-accent" onclick="saveNote()">💾 Зберегти</button>
   </div>
-  <div class="card">
-    <div class="section-title">🏴 Клани</div>
-    <button class="btn btn-accent" onclick="send('мій клан')">🏴 Мій клан</button>
-    <button class="btn btn-gray" onclick="send('топ кланів')">👑 Топ кланів</button>
-    <div class="divider"></div>
-    <input class="field" id="clan-name" placeholder="Назва нового клану">
-    <button class="btn btn-green" onclick="createClan()">🏴 Створити клан</button>
-  </div>
-  <div class="card">
-    <div class="section-title">🎭 Розваги</div>
-    <div class="action-grid">
-      <button class="action-btn" style="background:var(--card);border-radius:14px;border:1px solid var(--border)" onclick="send('правда чи дія')">
-        <span class="aicon">🎲</span><span class="albl">Правда/Дія</span>
-      </button>
-      <button class="action-btn" style="background:var(--card);border-radius:14px;border:1px solid var(--border)" onclick="send('куля')">
-        <span class="aicon">🎱</span><span class="albl">Магічна куля</span>
-      </button>
-      <button class="action-btn" style="background:var(--card);border-radius:14px;border:1px solid var(--border)" onclick="send('комплімент')">
-        <span class="aicon">💐</span><span class="albl">Комплімент</span>
-      </button>
-      <button class="action-btn" style="background:var(--card);border-radius:14px;border:1px solid var(--border)" onclick="send('що робити')">
-        <span class="aicon">🤔</span><span class="albl">Що робити?</span>
-      </button>
-    </div>
-  </div>
-  <div class="card">
-    <div class="section-title">📊 Топи</div>
-    <button class="btn btn-accent" onclick="send('топ json')">📊 Оновити топ (XP)</button>
-    <button class="btn btn-gray" onclick="send('статистика чату')">💬 Активність чату</button>
-    <button class="btn btn-gray" onclick="send('тиждень')">📅 Топ тижня</button>
-  </div>
+  <div class="stitle">📋 Збережені нотатки <span class="badge" id="note-cnt">0</span></div>
+  <div id="notes-list"></div>
 </div>
 
 <nav class="nav">
   <button class="nav-btn active" id="nav-profile" onclick="goPage('profile')"><span class="icon">👤</span>Профіль</button>
-  <button class="nav-btn" id="nav-economy" onclick="goPage('economy')"><span class="icon">💰</span>Економіка</button>
-  <button class="nav-btn" id="nav-social" onclick="goPage('social')"><span class="icon">💬</span>Соціалка</button>
-  <button class="nav-btn" id="nav-more" onclick="goPage('more')"><span class="icon">⚡</span>Ще</button>
+  <button class="nav-btn" id="nav-games" onclick="goPage('games')"><span class="icon">🎮</span>Ігри</button>
+  <button class="nav-btn" id="nav-rp" onclick="goPage('rp')"><span class="icon">🎭</span>РП</button>
+  <button class="nav-btn" id="nav-notes" onclick="goPage('notes')"><span class="icon">📝</span>Нотатки</button>
 </nav>
 
 <div class="toast" id="toast"></div>
@@ -303,7 +324,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 const BOT_TOKEN = '8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q';
 const API = 'https://api.telegram.org/bot' + BOT_TOKEN;
 const RP_KEY = 'simon_rp_v2';
-const PROF_KEY = 'simon_profile_cache';
+const NOTES_KEY = 'simon_notes';
 
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
@@ -314,131 +335,159 @@ if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
   myName = tg.initDataUnsafe.user.first_name || 'Гравець';
 }
 
-const LEVELS = [[0,"Новачок"],[200,"Учень"],[500,"Гравець"],[1000,"Досвідчений"],[2000,"Майстер"],[4000,"Легенда"],[8000,"Герой"],[15000,"Зірка"],[30000,"Елітний"],[60000,"Симон"]];
-const AVATARS = ["🥉","🥈","🥇","💎","🏆","👑","⚡","🌟","🔥","🎖"];
-
-// Команди які працюють тільки в групі
-const GROUP_CMDS = ['пара дня','шлюб','топ пари','одружитись','розлучитись','дружити з','посваритись з','стосунки з','сумісність з','+реп','-реп','реп','топ репутації','покликати боса','атакувати','магія','важкий удар','стрільба','бос','топ боса','мій клан','топ кланів','статистика чату','тиждень','правда чи дія','комплімент'];
-
-// ===== SEND MESSAGE TO BOT =====
+// ===== SEND =====
+const GROUP_CMDS = ['пара дня','шлюб','топ пари','одружитись','розлучитись','дружити з','посваритись з','+реп','-реп','реп','топ репутації','покликати боса','атакувати','магія','важкий удар','бос','топ кланів','мій клан','статистика чату','тиждень'];
 async function send(text) {
   if (!myId) { showToast('❌ Відкрий в Telegram!', 'err'); return; }
-
-  // Перевіряємо чи групова команда
-  const isGroup = GROUP_CMDS.some(c => text === c || text.startsWith(c + ' '));
+  const isGroup = GROUP_CMDS.some(c => text === c || text.startsWith(c+' '));
   if (isGroup) {
-    // Копіюємо в буфер і показуємо підказку
     try { await navigator.clipboard.writeText(text); } catch(e) {}
     showToast('📋 Скопійовано! Встав в груповий чат', 'ok');
     return;
   }
-
   try {
-    await fetch(API + '/sendMessage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: myId, text })
-    });
-    showToast('✅ Команду відправлено боту!', 'ok');
-  } catch(e) {
-    showToast('❌ Помилка', 'err');
-  }
-}
-
-// ===== NAVIGATION =====
-function goPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('p-' + name).classList.add('active');
-  document.getElementById('nav-' + name).classList.add('active');
-}
-
-// ===== PROFILE =====
-function loadCachedProfile() {
-  document.getElementById('pr-name').textContent = myName || '—';
-  try {
-    const c = JSON.parse(localStorage.getItem(PROF_KEY) || '{}');
-    if (c.coins !== undefined) document.getElementById('pr-coins').textContent = c.coins;
-    if (c.xp    !== undefined) document.getElementById('pr-xp').textContent    = c.xp;
-    if (c.wins  !== undefined) document.getElementById('pr-wins').textContent  = c.wins;
-    if (c.farm_streak !== undefined) document.getElementById('pr-streak').textContent = c.farm_streak;
-    if (c.level !== undefined) {
-      document.getElementById('av').textContent = AVATARS[c.level] || '👤';
-    }
-  } catch(e) {}
-}
-
-async function syncProfile() {
-  document.getElementById('sync-sp').style.display = 'block';
-  document.getElementById('sync-lbl').textContent = 'Синхронізація…';
-  await send('профіль json');
-  // Чекаємо відповідь бота і парсимо
-  await new Promise(r => setTimeout(r, 3000));
-  try {
-    const res  = await fetch(API + '/getUpdates?limit=50&timeout=0');
-    const data = await res.json();
-    if (data.ok) {
-      const updates = data.result || [];
-      for (let i = updates.length - 1; i >= 0; i--) {
-        const msg = updates[i].message;
-        if (msg && String(msg.chat.id) === myId && msg.text && msg.text.startsWith('PROFILE_JSON:')) {
-          const p = JSON.parse(msg.text.replace('PROFILE_JSON:', '').trim());
-          localStorage.setItem(PROF_KEY, JSON.stringify(p));
-          document.getElementById('pr-coins').textContent  = p.coins || 0;
-          document.getElementById('pr-xp').textContent     = p.xp || 0;
-          document.getElementById('pr-wins').textContent   = p.wins || 0;
-          document.getElementById('pr-streak').textContent = p.farm_streak || 0;
-          document.getElementById('av').textContent        = AVATARS[p.level] || '👤';
-          showToast('✅ Дані оновлено!', 'ok');
-          break;
-        }
-      }
-    }
-  } catch(e) {}
-  document.getElementById('sync-sp').style.display = 'none';
-  document.getElementById('sync-lbl').textContent = '🔄 Синхронізувати';
-}
-
-// ===== ECONOMY =====
-async function doTransfer() {
-  const toId   = document.getElementById('tr-id').value.trim();
-  const amount = document.getElementById('tr-amount').value.trim();
-  if (!toId || !amount) { showToast('❌ Заповни ID та суму', 'err'); return; }
-  if (!myId) { showToast('❌ Відкрий в Telegram!', 'err'); return; }
-  try {
-    await fetch(API + '/sendMessage', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: myId, text: 'переказати ' + amount })
-    });
-    showToast('💸 Відправлено! Зроби reply в боті', 'ok');
+    await fetch(API+'/sendMessage', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({chat_id:myId, text}) });
+    showToast('✅ Відправлено боту!', 'ok');
   } catch(e) { showToast('❌ Помилка', 'err'); }
 }
 
+// ===== NAV =====
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  if (name==='rp') renderBuiltin();
+  if (name==='notes') renderNotes();
+}
+
+// ===== PROFILE =====
+document.getElementById('pr-name').textContent = myName || '—';
+
+async function doTransfer() {
+  const amount = document.getElementById('tr-amount').value.trim();
+  if (!amount) { showToast('❌ Введи суму', 'err'); return; }
+  await send('переказати ' + amount);
+}
 async function doBankAction(action) {
   const amount = document.getElementById('bank-amount').value.trim();
   if (!amount) { showToast('❌ Введи суму', 'err'); return; }
   await send(action + ' ' + amount);
 }
 
-async function createClan() {
-  const name = document.getElementById('clan-name').value.trim();
-  if (!name) { showToast('❌ Введи назву клану', 'err'); return; }
-  await send('створити клан ' + name);
+// ===== GAMES =====
+function switchGameTab(tab, btn) {
+  ['dice','coin','rps','calc'].forEach(t => document.getElementById('game-'+t).style.display = t===tab?'':'none');
+  document.querySelectorAll('#p-games .tab-row .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
-// ===== SOCIAL TABS =====
-function switchSocTab(tab, btn) {
-  ['rp','marry','rep'].forEach(t => {
-    document.getElementById('soc-' + t).style.display = t === tab ? '' : 'none';
-  });
-  document.querySelectorAll('#p-social .tab-row:first-child .tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+const DICE_EMOJIS = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣'];
+function rnd(a, b) { return Math.floor(Math.random() * (b-a+1)) + a; }
+
+function rollDice(count) {
+  const rolls = Array.from({length:count}, () => rnd(1,6));
+  const emojis = rolls.map(r => DICE_EMOJIS[r-1]).join(' ');
+  document.getElementById('dice-res').textContent = emojis + (count>1 ? ' = '+rolls.reduce((a,b)=>a+b,0) : '');
+}
+
+function rollRandom() {
+  const min = parseInt(document.getElementById('rnd-min').value) || 1;
+  const max = parseInt(document.getElementById('rnd-max').value) || 100;
+  const result = rnd(Math.min(min,max), Math.max(min,max));
+  document.getElementById('rnd-res').textContent = '🎯 ' + result;
+}
+
+function flipCoin() {
+  const result = Math.random() < 0.5;
+  const el = document.getElementById('coin-res');
+  el.style.transform = 'scale(0)';
+  setTimeout(() => {
+    el.textContent = result ? '👑' : '🪙';
+    el.style.transform = 'scale(1)';
+    el.style.transition = 'transform .3s';
+  }, 200);
+}
+
+const BALL_ANSWERS = ['✅ Безумовно так!','✅ Так, звісно!','✅ Знаки кажуть так.','✅ Все йде до цього!','🤔 Поки незрозуміло…','🤔 Зосередься і спитай знову.','🤔 Краще не відповідати зараз.','❌ Не розраховуй на це.','❌ Мої джерела кажуть ні.','❌ Дуже сумнівно.','❌ Точно ні.'];
+function magicBall() {
+  const q = document.getElementById('ball-q').value.trim();
+  const el = document.getElementById('ball-res');
+  el.style.display = '';
+  el.textContent = '🎱 ' + BALL_ANSWERS[rnd(0, BALL_ANSWERS.length-1)] + (q ? '\n\n❓ '+q : '');
+}
+
+function infoCheck() {
+  const q = document.getElementById('info-q').value.trim();
+  if (!q) { showToast('❌ Введи тему', 'err'); return; }
+  const seed = q.split('').reduce((a,c) => a+c.charCodeAt(0), 0);
+  const pct  = ((seed * 1337 + parseInt(myId||'42')) % 101 + 101) % 101;
+  const el   = document.getElementById('info-res');
+  el.style.display = '';
+  const bar = '█'.repeat(Math.floor(pct/10)) + '░'.repeat(10-Math.floor(pct/10));
+  el.innerHTML = '📊 <b>'+q+'</b><br><br>'+bar+'<br><b>'+pct+'%</b>';
+}
+
+// RPS
+let rpsStats = JSON.parse(localStorage.getItem('rps_stats')||'{"w":0,"d":0,"l":0}');
+const RPS_BEATS = {rock:'scissors',scissors:'paper',paper:'rock'};
+const RPS_NAMES = {rock:'✊ Камінь',scissors:'✂️ Ножиці',paper:'🖐 Папір'};
+function updateRpsStats() {
+  document.getElementById('rps-w').textContent = rpsStats.w;
+  document.getElementById('rps-d').textContent = rpsStats.d;
+  document.getElementById('rps-l').textContent = rpsStats.l;
+}
+updateRpsStats();
+
+function playRps(choice) {
+  const opts = ['rock','scissors','paper'];
+  const bot  = opts[rnd(0,2)];
+  document.querySelectorAll('.rps-btn').forEach(b => b.classList.remove('chosen'));
+  document.getElementById('rps-'+choice).classList.add('chosen');
+  let result, emoji;
+  if (choice === bot) { result='draw'; emoji='🤝'; rpsStats.d++; }
+  else if (RPS_BEATS[choice]===bot) { result='win'; emoji='🎉'; rpsStats.w++; }
+  else { result='loss'; emoji='❌'; rpsStats.l++; }
+  localStorage.setItem('rps_stats', JSON.stringify(rpsStats));
+  updateRpsStats();
+  const texts = {win:'Ти виграв!', draw:'Нічия!', loss:'Ти програв!'};
+  document.getElementById('rps-res').textContent = emoji+' '+texts[result]+'\n\nТи: '+RPS_NAMES[choice]+'  |  Бот: '+RPS_NAMES[bot];
+}
+
+// CALC
+function calcConvert(type) {
+  const val = parseInt(document.getElementById('calc-input').value) || 0;
+  const el  = document.getElementById('calc-res');
+  el.style.display = '';
+  if (type==='xp2coins') {
+    const coins = val * 5;
+    el.textContent = '⚡ '+val+' XP = 💰 '+coins+' монет';
+    document.getElementById('calc-val').textContent = coins;
+    document.getElementById('calc-lbl').textContent = 'монет отримаєш';
+  } else {
+    const xp = Math.floor(val / 10);
+    el.textContent = '💰 '+val+' монет = ⚡ '+xp+' XP';
+    document.getElementById('calc-val').textContent = xp;
+    document.getElementById('calc-lbl').textContent = 'XP отримаєш';
+  }
+}
+
+function calcFarms() {
+  const goal = parseInt(document.getElementById('farm-goal').value) || 0;
+  if (!goal) { showToast('❌ Введи ціль', 'err'); return; }
+  const perFarm = 50;
+  const farms = Math.ceil(goal / perFarm);
+  const hours = farms * 4;
+  const days  = Math.floor(hours / 24);
+  const hoursLeft = hours % 24;
+  const el = document.getElementById('farm-res');
+  el.style.display = '';
+  el.textContent = '🌾 Треба '+farms+' фармів\n⏰ '+hours+' год ('+(days>0?days+' дн '+hoursLeft+' год':hoursLeft+' год')+')\n💰 По ~'+perFarm+' монет за фарм';
 }
 
 // ===== RP =====
 const EMOJIS = ['💕','🥰','😘','💋','🫂','❤️','👊','💥','⚔️','😤','🔥','💢','😡','🦵','💪','🌿','💊','🛏️','🌙','☕','🎉','😜','🎈','🥳','😂','💃','🕺','😢','😔','💔','😭','⚡','🎭','🌟','💫','🔮','🎯','🌀','👀','😏','🤗','🫶','✨','🩷','😈','🫠','🤭','💀','🐾','🌸'];
 let selEmo = null;
-
 document.getElementById('emo-grid').innerHTML = EMOJIS.map(e => `<button class="ebtn" onclick="pickEmo('${e}',this)">${e}</button>`).join('');
 
 function getCmds() { try { return JSON.parse(localStorage.getItem(RP_KEY)||'{}'); } catch(e) { return {}; } }
@@ -456,82 +505,134 @@ function upRpPrev() {
   const text = document.getElementById('rp-text').value.trim();
   const box  = document.getElementById('rp-prev');
   if (!name && !text) { box.innerHTML = '<span class="ph">Заповни поля…</span>'; upRpBtn(); return; }
-  box.innerHTML = (selEmo||'🎭') + ' ' + (text||'…')
-    .replace(/{від}/g, `<b style="color:#7c5cfc">${myName}</b>`)
-    .replace(/{до}/g,  '<b style="color:#fc5c9c">@Валя</b>');
+  box.innerHTML = (selEmo||'🎭')+' '+(text||'…').replace(/{від}/g,`<b style="color:#7c5cfc">${myName}</b>`).replace(/{до}/g,'<b style="color:#fc5c9c">@Валя</b>');
   upRpBtn();
 }
 function upRpBtn() {
   document.getElementById('rp-save-btn').disabled = !(document.getElementById('rp-name').value.trim() && document.getElementById('rp-text').value.trim() && selEmo);
 }
-
 async function saveRp() {
   const name = document.getElementById('rp-name').value.trim().toLowerCase();
   const text = document.getElementById('rp-text').value.trim();
-  if (!name || !text || !selEmo) return;
-  document.getElementById('rp-save-btn').disabled = true;
-  document.getElementById('rp-sp').style.display = 'block';
-  document.getElementById('rp-save-lbl').textContent = 'Зберігаємо…';
+  if (!name||!text||!selEmo) return;
+  document.getElementById('rp-save-btn').disabled=true;
+  document.getElementById('rp-sp').style.display='block';
+  document.getElementById('rp-save-lbl').textContent='Зберігаємо…';
   try {
-    if (myId) await fetch(API + '/sendMessage', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({chat_id:myId, text:'створити рп '+name+' | '+text+' | '+selEmo}) });
-    const cmds = getCmds(); cmds[name] = {text, emoji:selEmo}; setCmds(cmds);
-    showToast('✅ Збережено! Пиши "'+name+'" в групі', 'ok');
-    document.getElementById('rp-name').value = '';
-    document.getElementById('rp-text').value = '';
-    selEmo = null;
-    document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
-    document.getElementById('rp-prev').innerHTML = '<span class="ph">Заповни поля…</span>';
+    if (myId) await fetch(API+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:myId,text:'створити рп '+name+' | '+text+' | '+selEmo})});
+    const cmds=getCmds(); cmds[name]={text,emoji:selEmo}; setCmds(cmds);
+    showToast('✅ Збережено! Пиши "'+name+'" в групі','ok');
+    document.getElementById('rp-name').value='';
+    document.getElementById('rp-text').value='';
+    selEmo=null;
+    document.querySelectorAll('.ebtn').forEach(b=>b.classList.remove('sel'));
+    document.getElementById('rp-prev').innerHTML='<span class="ph">Заповни поля…</span>';
     upRpBtn();
-  } catch(e) { showToast('❌ Помилка', 'err'); }
-  finally {
-    document.getElementById('rp-sp').style.display = 'none';
-    document.getElementById('rp-save-lbl').textContent = '💾 Зберегти в бота';
-    upRpBtn();
-  }
+  } catch(e){showToast('❌ Помилка','err');}
+  finally{document.getElementById('rp-sp').style.display='none';document.getElementById('rp-save-lbl').textContent='💾 Зберегти в бота';upRpBtn();}
 }
-
 async function deleteRp(name) {
-  if (myId) { try { await fetch(API+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:myId,text:'видалити рп '+name})}); } catch(e){} }
-  const cmds = getCmds(); delete cmds[name]; setCmds(cmds);
-  renderRpList(); showToast('🗑️ Видалено', 'ok');
+  if (myId){try{await fetch(API+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:myId,text:'видалити рп '+name})});}catch(e){}}
+  const cmds=getCmds(); delete cmds[name]; setCmds(cmds);
+  renderRpList(); showToast('🗑️ Видалено','ok');
+}
+function renderRpList() {
+  const cmds=getCmds(); const list=Object.entries(cmds); const el=document.getElementById('rp-items');
+  if (!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">🎭<br><br>Ще немає команд</div>';return;}
+  el.innerHTML=list.map(([name,d])=>`<div class="rp-item"><div class="rp-top"><span class="rp-nm">${name}</span><span>${d.emoji||'🎭'}</span></div><div class="rp-tx">${d.text||''}</div><div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;color:var(--muted)"><code style="color:var(--accent2)">${name}</code> + reply</span><button class="rp-del" onclick="deleteRp('${name}')">🗑️</button></div></div>`).join('');
+}
+function switchMyRp(tab, btn) {
+  document.getElementById('rp-create').style.display=tab==='create'?'':'none';
+  document.getElementById('rp-list').style.display=tab==='list'?'':'none';
+  document.querySelectorAll('#rp-my .tab-row .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if (tab==='list') renderRpList();
+}
+function switchRpTab(tab, btn) {
+  document.getElementById('rp-my').style.display=tab==='my'?'':'none';
+  document.getElementById('rp-builtin').style.display=tab==='builtin'?'':'none';
+  document.querySelectorAll('#p-rp > .tab-row .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if (tab==='builtin') renderBuiltin();
 }
 
-function renderRpList() {
-  const cmds = getCmds();
-  const list = Object.entries(cmds);
-  const el   = document.getElementById('rp-items');
-  if (!list.length) {
-    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">🎭<br><br>Ще немає команд.<br>Створи першу!</div>';
-    return;
-  }
-  el.innerHTML = list.map(([name, d]) => `
-    <div class="rp-item">
-      <div class="rp-top"><span class="rp-name">${name}</span><span>${d.emoji||'🎭'}</span></div>
-      <div class="rp-text">${d.text||''}</div>
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <span style="font-size:11px;color:var(--muted)"><code style="color:var(--accent2)">${name}</code> + reply в групі</span>
-        <button class="rp-del" onclick="deleteRp('${name}')">🗑️</button>
-      </div>
+// BUILTIN RP
+const BUILTIN_RP = [
+  ['обійняти','🤗'],['поцілувати','💋'],['погладити','✋'],['потискати руку','🤝'],
+  ['посміхнутись','😊'],['підморгнути','😉'],['помахати','👋'],['поплескати','👏'],
+  ['похвалити','⭐'],['поздоровити','🎉'],['штовхнути','😄'],['лоскотати','😂'],
+  ['дражнити','😜'],['кинути сніжку','❄️'],['бризнути водою','💦'],
+  ['вдарити','👊'],['жбурнути','😤'],['образити','😠'],['покусати','😬'],
+  ['подряпати','🐾'],['налякати','👻'],['переслідувати','🏃'],
+  ['пригостити','🍰'],['напоїти кавою','☕'],['підлікувати','💊'],
+  ['захистити','🛡'],['прикрити','🫂'],['заколисати','😴'],['розбудити','⏰'],
+  ['заспівати для','🎵'],['станцювати з','💃'],['запросити','📨'],
+  ['проігнорувати','😶'],['пробачити','🕊'],['помиритись з','🤗'],
+  ['подарувати квіти','🌹'],['зробити сюрприз','🎁'],
+  ['потягнутись','🙆'],['позіхнути','😪'],['засміятись','😂'],['задуматись','🤔'],
+];
+function renderBuiltin() {
+  const el = document.getElementById('builtin-list');
+  el.innerHTML = BUILTIN_RP.map(([name, emoji]) => `
+    <div class="builtin-item" onclick="copyRp('${name}')">
+      <div><span style="font-size:18px">${emoji}</span> <span class="builtin-name">${name}</span></div>
+      <span class="builtin-copy">📋 Копіювати</span>
     </div>`).join('');
 }
+async function copyRp(name) {
+  try { await navigator.clipboard.writeText(name); } catch(e) {}
+  showToast('📋 "'+name+'" скопійовано! Встав в групу + reply', 'ok');
+}
 
-function switchRpTab(tab, btn) {
-  document.getElementById('rp-create-box').style.display = tab==='create' ? '' : 'none';
-  document.getElementById('rp-list-box').style.display   = tab==='list'   ? '' : 'none';
-  document.querySelectorAll('#soc-rp .tab-row .tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (tab === 'list') renderRpList();
+// ===== NOTES =====
+function getNotes() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)||'[]'); } catch(e) { return []; } }
+function setNotes(n) { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); document.getElementById('note-cnt').textContent = n.length; }
+
+function saveNote() {
+  const text = document.getElementById('note-text').value.trim();
+  if (!text) { showToast('❌ Введи текст', 'err'); return; }
+  const notes = getNotes();
+  notes.unshift({ text, date: new Date().toLocaleDateString('uk-UA') });
+  setNotes(notes);
+  document.getElementById('note-text').value = '';
+  renderNotes();
+  showToast('✅ Нотатку збережено', 'ok');
+}
+function deleteNote(i) {
+  const notes = getNotes();
+  notes.splice(i, 1);
+  setNotes(notes);
+  renderNotes();
+}
+function renderNotes() {
+  const notes = getNotes();
+  const el    = document.getElementById('notes-list');
+  document.getElementById('note-cnt').textContent = notes.length;
+  if (!notes.length) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">📝<br><br>Ще немає нотаток</div>';
+    return;
+  }
+  el.innerHTML = notes.map((n, i) => `
+    <div class="note-item">
+      <div class="note-text">${n.text}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="note-date">📅 ${n.date}</span>
+        <button class="note-del" onclick="deleteNote(${i})">🗑️</button>
+      </div>
+    </div>`).join('');
 }
 
 // ===== TOAST =====
 function showToast(msg, type='') {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast show' + (type ? ' '+type : '');
+  t.textContent = msg; t.className = 'toast show'+(type?' '+type:'');
   setTimeout(() => t.className = 'toast', 2200);
 }
 
 // Init
-loadCachedProfile();
+renderBuiltin();
+renderNotes();
+document.getElementById('note-cnt').textContent = getNotes().length;
 </script>
 </body>
 </html>
