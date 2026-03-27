@@ -59,8 +59,13 @@
   .btn-save:active { transform:scale(0.97); }
   .btn-save:disabled { background:var(--border); box-shadow:none; color:var(--muted); cursor:not-allowed; transform:none; }
 
-  .loading { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+  .spinner { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
   @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* Лента */
+  .feed-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .feed-sync { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; }
+  .feed-sync:active { transform:scale(0.95); }
 
   .feed-empty { text-align:center; padding:50px 20px; color:var(--muted); }
   .feed-empty-icon { font-size:48px; margin-bottom:12px; }
@@ -75,6 +80,9 @@
   .rp-btns { display:flex; gap:8px; }
   .rbtn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; transition:all .15s; }
   .rbtn.red { border-color:#ef4444; color:#ef4444; background:rgba(239,68,68,0.1); }
+
+  .loading-block { text-align:center; padding:30px; color:var(--muted); }
+  .loading-spin { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 10px; }
 
   .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--accent); border-radius:12px; padding:10px 20px; font-size:13px; font-weight:700; opacity:0; transition:all .3s; z-index:100; white-space:nowrap; }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
@@ -101,45 +109,44 @@
 
   <div class="tabs">
     <button class="tab active" onclick="switchTab('create')" id="tab-create">➕ Нова команда</button>
-    <button class="tab" onclick="switchTab('feed')" id="tab-feed">📜 Мої РП <span class="badge" id="fcnt">0</span></button>
+    <button class="tab" onclick="switchTab('feed')" id="tab-feed">📜 Мої РП <span class="badge" id="fcnt">…</span></button>
   </div>
 
   <!-- CREATE -->
   <div id="page-create">
-
     <div class="block">
       <div class="slabel">🏷️ Назва команди</div>
       <input class="field" id="f-name" placeholder="Наприклад: кусь, обійми, атака…" oninput="upPrev()">
       <div class="hint">Це слово пишеш в групі щоб викликати РП</div>
     </div>
-
     <div class="block">
       <div class="slabel">✏️ Текст РП</div>
       <input class="field" id="f-text" placeholder="{від} вкусив {до} за вухо" oninput="upPrev()">
       <div class="hint"><b>{від}</b> — твоє ім'я &nbsp;|&nbsp; <b>{до}</b> — ім'я цілі (reply)</div>
     </div>
-
     <div class="block">
       <div class="slabel">😊 Емодзі</div>
       <div class="egrid" id="emo-grid"></div>
     </div>
-
     <div class="block" style="margin-bottom:12px">
       <div class="slabel">👁 Превью</div>
       <div class="preview" id="preview"><span class="ph">Заповни поля…</span></div>
     </div>
-
     <button class="btn-save" id="btn-save" onclick="saveCmd()" disabled>
-      <span class="loading" id="spinner"></span>
+      <span class="spinner" id="spinner"></span>
       <span id="btn-label">💾 Зберегти в бота</span>
     </button>
-
   </div>
 
   <!-- FEED -->
   <div id="page-feed" style="display:none">
-    <div class="slabel">Збережені РП команди</div>
-    <div id="feed-list"></div>
+    <div class="feed-header">
+      <div class="slabel" style="margin-bottom:0">Мої РП команди</div>
+      <button class="feed-sync" onclick="loadCmds()">🔄 Оновити</button>
+    </div>
+    <div id="feed-list">
+      <div class="loading-block"><div class="loading-spin"></div>Завантаження…</div>
+    </div>
   </div>
 
 </div>
@@ -151,27 +158,26 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const BOT_TOKEN = '8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q';
-const API = 'https://api.telegram.org/bot' + BOT_TOKEN;
+// ===== КОНФІГ =====
+const BOT_TOKEN  = '8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q';
+const BIN_ID     = '69c6a5c5c3097a1dd56832ab';
+const BIN_KEY    = '$2a$10$3mHD86jkJ6I01vu8PfE3qOdLvkey.CY/LPy/h8.yxxqnq0IxzlZ42';
+const BIN_URL    = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
+const BOT_API    = 'https://api.telegram.org/bot' + BOT_TOKEN;
 
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-// Отримуємо user_id з Telegram
 let myId   = null;
 let myName = 'Влад';
 if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-  myId   = tg.initDataUnsafe.user.id;
+  myId   = String(tg.initDataUnsafe.user.id);
   myName = tg.initDataUnsafe.user.first_name || 'Влад';
 }
 
 const EMOJIS = ['💕','🥰','😘','💋','🫂','❤️','👊','💥','⚔️','😤','🔥','💢','😡','🦵','💪','🌿','💊','🛏️','🌙','☕','🎉','😜','🎈','🥳','😂','💃','🕺','😢','😔','💔','😭','⚡','🎭','🌟','💫','🔮','🎯','🌀','👀','😏','🤗','🫶','✨','🩷','😈','🫠','🤭','💀','🐾','🌸'];
-
 let selEmo = null;
-let localCmds = JSON.parse(localStorage.getItem('srp_cmds') || '[]');
-document.getElementById('fcnt').textContent = localCmds.length;
 
-// Рендер емодзі
 document.getElementById('emo-grid').innerHTML = EMOJIS.map(e =>
   `<button class="ebtn" onclick="pickEmo('${e}',this)">${e}</button>`
 ).join('');
@@ -188,7 +194,7 @@ function upPrev() {
   const text = document.getElementById('f-text').value.trim();
   const box  = document.getElementById('preview');
   if (!name && !text) { box.innerHTML = '<span class="ph">Заповни поля…</span>'; upBtn(); return; }
-  const emo = selEmo || '🎭';
+  const emo  = selEmo || '🎭';
   const prev = (text || '…')
     .replace(/{від}/g,  `<span class="nm">${myName}</span>`)
     .replace(/{до}/g,   '<span class="tg">@Валя</span>')
@@ -204,114 +210,142 @@ function upBtn() {
   document.getElementById('btn-save').disabled = !ok;
 }
 
-async function saveCmd() {
-  const name  = document.getElementById('f-name').value.trim().toLowerCase();
-  const text  = document.getElementById('f-text').value.trim();
-  if (!name || !text || !selEmo) return;
-
-  // Показуємо спінер
-  document.getElementById('btn-save').disabled = true;
-  document.getElementById('spinner').style.display = 'block';
-  document.getElementById('btn-label').textContent = 'Зберігаємо…';
-
-  // Відправляємо команду боту через sendMessage
-  // Бот отримає повідомлення і збереже команду
-  const cmdText = 'створити рп ' + name + ' | ' + text + ' | ' + selEmo;
-
+// ===== ЧИТАТИ З JSONBIN =====
+async function loadCmds() {
+  document.getElementById('feed-list').innerHTML =
+    '<div class="loading-block"><div class="loading-spin"></div>Завантаження…</div>';
   try {
-    if (!myId) throw new Error('no_user_id');
-
-    const res = await fetch(API + '/sendMessage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: myId,
-        text: cmdText,
-      })
+    const res  = await fetch(BIN_URL + '/latest', {
+      headers: { 'X-Master-Key': BIN_KEY }
     });
-
     const data = await res.json();
-
-    if (data.ok) {
-      // Зберігаємо локально
-      localCmds = localCmds.filter(x => x.name !== name);
-      localCmds.unshift({ name, text, emoji: selEmo });
-      localStorage.setItem('srp_cmds', JSON.stringify(localCmds));
-      document.getElementById('fcnt').textContent = localCmds.length;
-
-      showToast('✅ Збережено! Пиши "' + name + '" в групі', 'success');
-
-      // Скидаємо форму
-      document.getElementById('f-name').value = '';
-      document.getElementById('f-text').value = '';
-      selEmo = null;
-      document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
-      document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля…</span>';
-    } else {
-      throw new Error(data.description || 'API error');
-    }
+    const all  = data.record || {};
+    const uid  = myId || 'unknown';
+    const cmds = all[uid] || {};
+    const list = Object.entries(cmds);
+    document.getElementById('fcnt').textContent = list.length;
+    renderFeed(list);
   } catch(e) {
-    if (e.message === 'no_user_id') {
-      // Якщо відкрито не в Telegram — генеруємо текст для копіювання
-      copyText(cmdText);
-      showToast('📋 Скопійовано! Відправ боту в приваті', 'success');
-      localCmds = localCmds.filter(x => x.name !== name);
-      localCmds.unshift({ name, text, emoji: selEmo });
-      localStorage.setItem('srp_cmds', JSON.stringify(localCmds));
-      document.getElementById('fcnt').textContent = localCmds.length;
-    } else {
-      showToast('❌ Помилка: ' + e.message, 'error');
-    }
-  } finally {
-    document.getElementById('spinner').style.display = 'none';
-    document.getElementById('btn-label').textContent = '💾 Зберегти в бота';
-    upBtn();
+    document.getElementById('feed-list').innerHTML =
+      '<div class="feed-empty"><div class="feed-empty-icon">❌</div><div>Помилка завантаження.<br>Натисни 🔄 Оновити</div></div>';
   }
 }
 
-async function deleteCmd(name) {
-  const cmdText = 'видалити рп ' + name;
-
-  try {
-    if (myId) {
-      await fetch(API + '/sendMessage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: myId, text: cmdText })
-      });
-    }
-  } catch(e) {}
-
-  localCmds = localCmds.filter(x => x.name !== name);
-  localStorage.setItem('srp_cmds', JSON.stringify(localCmds));
-  document.getElementById('fcnt').textContent = localCmds.length;
-  renderFeed();
-  showToast('🗑️ Видалено', 'success');
-}
-
-function renderFeed() {
+function renderFeed(list) {
   const el = document.getElementById('feed-list');
-  if (!localCmds.length) {
+  if (!list.length) {
     el.innerHTML = `<div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Ще немає команд.<br>Створи першу!</div></div>`;
     return;
   }
-  el.innerHTML = localCmds.map(r => `
+  el.innerHTML = list.map(([name, d]) => `
     <div class="rp-item">
       <div class="rp-top">
-        <span class="rp-name">${r.name}</span>
-        <span class="rp-emoji">${r.emoji}</span>
+        <span class="rp-name">${name}</span>
+        <span class="rp-emoji">${d.emoji || '🎭'}</span>
       </div>
-      <div class="rp-text">${r.text}</div>
-      <div class="rp-usage">В групі: <code>${r.name}</code> + reply</div>
+      <div class="rp-text">${d.text || ''}</div>
+      <div class="rp-usage">В групі: <code>${name}</code> + reply</div>
       <div class="rp-btns">
-        <button class="rbtn red" onclick="deleteCmd('${r.name}')">🗑️ Видалити</button>
+        <button class="rbtn red" onclick="deleteCmd('${name}')">🗑️ Видалити</button>
       </div>
     </div>`).join('');
 }
 
-function copyText(text) {
-  if (navigator.clipboard) navigator.clipboard.writeText(text).catch(()=>{});
-  else { const el=document.createElement('textarea'); el.value=text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); }
+// ===== ЗБЕРЕГТИ =====
+async function saveCmd() {
+  const name = document.getElementById('f-name').value.trim().toLowerCase();
+  const text = document.getElementById('f-text').value.trim();
+  if (!name || !text || !selEmo) return;
+
+  setLoading(true);
+  try {
+    // 1. Відправляємо команду боту
+    if (myId) {
+      await fetch(BOT_API + '/sendMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: myId,
+          text: 'створити рп ' + name + ' | ' + text + ' | ' + selEmo
+        })
+      });
+    }
+
+    // 2. Зберігаємо в JSONBin
+    const getRes = await fetch(BIN_URL + '/latest', {
+      headers: { 'X-Master-Key': BIN_KEY }
+    });
+    const getData = await getRes.json();
+    const all = getData.record || {};
+    const uid = myId || 'unknown';
+    if (!all[uid]) all[uid] = {};
+    all[uid][name] = { text, emoji: selEmo, media: null };
+
+    await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': BIN_KEY
+      },
+      body: JSON.stringify(all)
+    });
+
+    showToast('✅ Збережено! Пиши "' + name + '" в групі', 'success');
+
+    // Скидаємо форму
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-text').value = '';
+    selEmo = null;
+    document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
+    document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля…</span>';
+    upBtn();
+
+  } catch(e) {
+    showToast('❌ Помилка збереження', 'error');
+  } finally {
+    setLoading(false);
+  }
+}
+
+// ===== ВИДАЛИТИ =====
+async function deleteCmd(name) {
+  setLoading(true);
+  try {
+    // 1. Відправляємо команду боту
+    if (myId) {
+      await fetch(BOT_API + '/sendMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: myId, text: 'видалити рп ' + name })
+      });
+    }
+
+    // 2. Видаляємо з JSONBin
+    const getRes  = await fetch(BIN_URL + '/latest', { headers: { 'X-Master-Key': BIN_KEY } });
+    const getData = await getRes.json();
+    const all = getData.record || {};
+    const uid = myId || 'unknown';
+    if (all[uid]) delete all[uid][name];
+
+    await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': BIN_KEY },
+      body: JSON.stringify(all)
+    });
+
+    showToast('🗑️ Видалено', 'success');
+    loadCmds();
+  } catch(e) {
+    showToast('❌ Помилка видалення', 'error');
+  } finally {
+    setLoading(false);
+  }
+}
+
+function setLoading(on) {
+  document.getElementById('btn-save').disabled = on;
+  document.getElementById('spinner').style.display = on ? 'block' : 'none';
+  document.getElementById('btn-label').textContent = on ? 'Зберігаємо…' : '💾 Зберегти в бота';
 }
 
 function switchTab(tab) {
@@ -321,7 +355,7 @@ function switchTab(tab) {
   document.getElementById('tab-feed').classList.toggle('active', tab==='feed');
   document.getElementById('nav-create').classList.toggle('active', tab==='create');
   document.getElementById('nav-feed').classList.toggle('active', tab==='feed');
-  if (tab==='feed') renderFeed();
+  if (tab === 'feed') loadCmds();
 }
 
 function showToast(msg, type='') {
@@ -330,6 +364,11 @@ function showToast(msg, type='') {
   t.className = 'toast show' + (type ? ' ' + type : '');
   setTimeout(() => t.className = 'toast', 2500);
 }
+
+// Завантажуємо кількість при старті
+loadCmds().then(() => {}).catch(() => {
+  document.getElementById('fcnt').textContent = '0';
+});
 </script>
 </body>
 </html>
