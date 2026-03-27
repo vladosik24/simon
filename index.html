@@ -36,7 +36,6 @@
   .field { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--text); font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; outline:none; transition:border-color .2s; }
   .field:focus { border-color:var(--accent); }
   .field::placeholder { color:var(--muted); font-weight:600; font-size:13px; }
-
   .hint { font-size:11px; color:var(--muted); margin-top:6px; line-height:1.5; }
   .hint b { color:var(--accent2); }
 
@@ -55,12 +54,14 @@
     border:none; border-radius:14px; color:#fff;
     font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700;
     cursor:pointer; box-shadow:0 6px 20px rgba(34,197,94,0.4);
-    transition:all .2s;
+    transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;
   }
   .btn-save:active { transform:scale(0.97); }
   .btn-save:disabled { background:var(--border); box-shadow:none; color:var(--muted); cursor:not-allowed; transform:none; }
 
-  /* Мої РП */
+  .loading { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
   .feed-empty { text-align:center; padding:50px 20px; color:var(--muted); }
   .feed-empty-icon { font-size:48px; margin-bottom:12px; }
   .rp-item { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:10px; animation:fin .3s ease; }
@@ -68,15 +69,17 @@
   .rp-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
   .rp-name { font-family:'Unbounded',sans-serif; font-size:12px; font-weight:700; color:var(--accent); }
   .rp-emoji { font-size:18px; }
-  .rp-text { font-size:13px; color:#c8cbf0; line-height:1.5; margin-bottom:8px; }
+  .rp-text { font-size:13px; color:#c8cbf0; line-height:1.5; margin-bottom:6px; }
   .rp-usage { font-size:11px; color:var(--muted); background:var(--bg); border-radius:6px; padding:4px 8px; display:inline-block; margin-bottom:8px; }
   .rp-usage code { color:var(--accent2); }
   .rp-btns { display:flex; gap:8px; }
   .rbtn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; transition:all .15s; }
-  .rbtn.green { border-color:var(--green); color:var(--green); background:rgba(34,197,94,0.1); }
+  .rbtn.red { border-color:#ef4444; color:#ef4444; background:rgba(239,68,68,0.1); }
 
-  .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--green); border-radius:12px; padding:10px 20px; font-size:13px; font-weight:700; opacity:0; transition:all .3s; z-index:100; white-space:nowrap; }
+  .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--accent); border-radius:12px; padding:10px 20px; font-size:13px; font-weight:700; opacity:0; transition:all .3s; z-index:100; white-space:nowrap; }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.success { border-color:var(--green); }
+  .toast.error { border-color:#ef4444; }
 
   .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(13,15,26,0.96); backdrop-filter:blur(12px); border-top:1px solid var(--border); padding:10px 20px 16px; display:flex; justify-content:space-around; z-index:50; }
   .nitem { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; color:var(--muted); font-weight:700; cursor:pointer; background:none; border:none; font-family:'Nunito',sans-serif; padding:4px 12px; }
@@ -104,47 +107,39 @@
   <!-- CREATE -->
   <div id="page-create">
 
-    <!-- Назва команди -->
     <div class="block">
       <div class="slabel">🏷️ Назва команди</div>
       <input class="field" id="f-name" placeholder="Наприклад: кусь, обійми, атака…" oninput="upPrev()">
-      <div class="hint">Саме це слово пишеш в групі щоб викликати РП</div>
+      <div class="hint">Це слово пишеш в групі щоб викликати РП</div>
     </div>
 
-    <!-- Текст -->
     <div class="block">
       <div class="slabel">✏️ Текст РП</div>
-      <input class="field" id="f-text" placeholder="Наприклад: {від} вкусив {до} за вухо" oninput="upPrev()">
-      <div class="hint"><b>{від}</b> — твоє ім'я &nbsp;|&nbsp; <b>{до}</b> — ім'я цілі</div>
+      <input class="field" id="f-text" placeholder="{від} вкусив {до} за вухо" oninput="upPrev()">
+      <div class="hint"><b>{від}</b> — твоє ім'я &nbsp;|&nbsp; <b>{до}</b> — ім'я цілі (reply)</div>
     </div>
 
-    <!-- Емодзі -->
     <div class="block">
       <div class="slabel">😊 Емодзі</div>
       <div class="egrid" id="emo-grid"></div>
     </div>
 
-    <!-- Превью -->
     <div class="block" style="margin-bottom:12px">
-      <div class="slabel">👁 Превью в чаті</div>
+      <div class="slabel">👁 Превью</div>
       <div class="preview" id="preview"><span class="ph">Заповни поля…</span></div>
     </div>
 
     <button class="btn-save" id="btn-save" onclick="saveCmd()" disabled>
-      💾 Зберегти команду в бота
+      <span class="loading" id="spinner"></span>
+      <span id="btn-label">💾 Зберегти в бота</span>
     </button>
 
   </div>
 
   <!-- FEED -->
   <div id="page-feed" style="display:none">
-    <div class="slabel">Мої збережені РП</div>
-    <div id="feed-list">
-      <div class="feed-empty">
-        <div class="feed-empty-icon">🎭</div>
-        <div>Ще немає команд.<br>Створи першу!</div>
-      </div>
-    </div>
+    <div class="slabel">Збережені РП команди</div>
+    <div id="feed-list"></div>
   </div>
 
 </div>
@@ -156,129 +151,167 @@
 <div class="toast" id="toast"></div>
 
 <script>
+const BOT_TOKEN = '8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q';
+const API = 'https://api.telegram.org/bot' + BOT_TOKEN;
+
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
+
+// Отримуємо user_id з Telegram
+let myId   = null;
+let myName = 'Влад';
+if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  myId   = tg.initDataUnsafe.user.id;
+  myName = tg.initDataUnsafe.user.first_name || 'Влад';
+}
 
 const EMOJIS = ['💕','🥰','😘','💋','🫂','❤️','👊','💥','⚔️','😤','🔥','💢','😡','🦵','💪','🌿','💊','🛏️','🌙','☕','🎉','😜','🎈','🥳','😂','💃','🕺','😢','😔','💔','😭','⚡','🎭','🌟','💫','🔮','🎯','🌀','👀','😏','🤗','🫶','✨','🩷','😈','🫠','🤭','💀','🐾','🌸'];
 
 let selEmo = null;
-let localFeed = JSON.parse(localStorage.getItem('simon_rp_cmds') || '[]');
-
-// Ім'я з Telegram
-let myName = 'Влад';
-if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-  myName = tg.initDataUnsafe.user.first_name || 'Влад';
-}
+let localCmds = JSON.parse(localStorage.getItem('srp_cmds') || '[]');
+document.getElementById('fcnt').textContent = localCmds.length;
 
 // Рендер емодзі
 document.getElementById('emo-grid').innerHTML = EMOJIS.map(e =>
   `<button class="ebtn" onclick="pickEmo('${e}',this)">${e}</button>`
 ).join('');
-document.getElementById('fcnt').textContent = localFeed.length;
 
 function pickEmo(e, btn) {
   selEmo = e;
   document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
-  upPrev();
-  upBtn();
+  upPrev(); upBtn();
 }
 
 function upPrev() {
-  const name = document.getElementById('f-name').value.trim().toLowerCase();
+  const name = document.getElementById('f-name').value.trim();
   const text = document.getElementById('f-text').value.trim();
   const box  = document.getElementById('preview');
-
-  if (!name && !text) {
-    box.innerHTML = '<span class="ph">Заповни поля…</span>';
-    upBtn(); return;
-  }
-
-  const emo     = selEmo || '🎭';
-  const preview = (text || '...')
+  if (!name && !text) { box.innerHTML = '<span class="ph">Заповни поля…</span>'; upBtn(); return; }
+  const emo = selEmo || '🎭';
+  const prev = (text || '…')
     .replace(/{від}/g,  `<span class="nm">${myName}</span>`)
-    .replace(/{до}/g,   `<span class="tg">@Валя</span>`)
+    .replace(/{до}/g,   '<span class="tg">@Валя</span>')
     .replace(/{from}/g, `<span class="nm">${myName}</span>`)
-    .replace(/{to}/g,   `<span class="tg">@Валя</span>`);
-
-  box.innerHTML = emo + ' ' + preview;
+    .replace(/{to}/g,   '<span class="tg">@Валя</span>');
+  box.innerHTML = emo + ' ' + prev;
   upBtn();
 }
 
 function upBtn() {
-  const name = document.getElementById('f-name').value.trim();
-  const text = document.getElementById('f-text').value.trim();
-  document.getElementById('btn-save').disabled = !(name && text && selEmo);
+  const ok = !!(document.getElementById('f-name').value.trim() &&
+                document.getElementById('f-text').value.trim() && selEmo);
+  document.getElementById('btn-save').disabled = !ok;
 }
 
-function saveCmd() {
-  const name = document.getElementById('f-name').value.trim().toLowerCase();
-  const text = document.getElementById('f-text').value.trim();
+async function saveCmd() {
+  const name  = document.getElementById('f-name').value.trim().toLowerCase();
+  const text  = document.getElementById('f-text').value.trim();
   if (!name || !text || !selEmo) return;
 
-  // Відправляємо в бота через sendData
-  const payload = JSON.stringify({
-    action: 'save_rp',
-    name:   name,
-    text:   text,
-    emoji:  selEmo,
-  });
+  // Показуємо спінер
+  document.getElementById('btn-save').disabled = true;
+  document.getElementById('spinner').style.display = 'block';
+  document.getElementById('btn-label').textContent = 'Зберігаємо…';
 
-  if (tg && tg.sendData) {
-    tg.sendData(payload);
-    // Зберігаємо локально щоб показати в списку
-    localFeed = localFeed.filter(x => x.name !== name);
-    localFeed.unshift({ name, text, emoji: selEmo });
-    localStorage.setItem('simon_rp_cmds', JSON.stringify(localFeed));
-    document.getElementById('fcnt').textContent = localFeed.length;
-    // Бот закриє застосунок після sendData
-  } else {
-    // Якщо не в Telegram — показуємо що збережено локально
-    localFeed = localFeed.filter(x => x.name !== name);
-    localFeed.unshift({ name, text, emoji: selEmo });
-    localStorage.setItem('simon_rp_cmds', JSON.stringify(localFeed));
-    document.getElementById('fcnt').textContent = localFeed.length;
-    showToast('✅ Збережено локально (тест)');
+  // Відправляємо команду боту через sendMessage
+  // Бот отримає повідомлення і збереже команду
+  const cmdText = 'створити рп ' + name + ' | ' + text + ' | ' + selEmo;
+
+  try {
+    if (!myId) throw new Error('no_user_id');
+
+    const res = await fetch(API + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: myId,
+        text: cmdText,
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.ok) {
+      // Зберігаємо локально
+      localCmds = localCmds.filter(x => x.name !== name);
+      localCmds.unshift({ name, text, emoji: selEmo });
+      localStorage.setItem('srp_cmds', JSON.stringify(localCmds));
+      document.getElementById('fcnt').textContent = localCmds.length;
+
+      showToast('✅ Збережено! Пиши "' + name + '" в групі', 'success');
+
+      // Скидаємо форму
+      document.getElementById('f-name').value = '';
+      document.getElementById('f-text').value = '';
+      selEmo = null;
+      document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
+      document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля…</span>';
+    } else {
+      throw new Error(data.description || 'API error');
+    }
+  } catch(e) {
+    if (e.message === 'no_user_id') {
+      // Якщо відкрито не в Telegram — генеруємо текст для копіювання
+      copyText(cmdText);
+      showToast('📋 Скопійовано! Відправ боту в приваті', 'success');
+      localCmds = localCmds.filter(x => x.name !== name);
+      localCmds.unshift({ name, text, emoji: selEmo });
+      localStorage.setItem('srp_cmds', JSON.stringify(localCmds));
+      document.getElementById('fcnt').textContent = localCmds.length;
+    } else {
+      showToast('❌ Помилка: ' + e.message, 'error');
+    }
+  } finally {
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('btn-label').textContent = '💾 Зберегти в бота';
+    upBtn();
   }
+}
+
+async function deleteCmd(name) {
+  const cmdText = 'видалити рп ' + name;
+
+  try {
+    if (myId) {
+      await fetch(API + '/sendMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: myId, text: cmdText })
+      });
+    }
+  } catch(e) {}
+
+  localCmds = localCmds.filter(x => x.name !== name);
+  localStorage.setItem('srp_cmds', JSON.stringify(localCmds));
+  document.getElementById('fcnt').textContent = localCmds.length;
+  renderFeed();
+  showToast('🗑️ Видалено', 'success');
 }
 
 function renderFeed() {
   const el = document.getElementById('feed-list');
-  if (!localFeed.length) {
+  if (!localCmds.length) {
     el.innerHTML = `<div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Ще немає команд.<br>Створи першу!</div></div>`;
     return;
   }
-  el.innerHTML = localFeed.map(r => `
+  el.innerHTML = localCmds.map(r => `
     <div class="rp-item">
       <div class="rp-top">
         <span class="rp-name">${r.name}</span>
         <span class="rp-emoji">${r.emoji}</span>
       </div>
       <div class="rp-text">${r.text}</div>
-      <div class="rp-usage">В групі: пиши <code>${r.name}</code> + reply</div>
+      <div class="rp-usage">В групі: <code>${r.name}</code> + reply</div>
       <div class="rp-btns">
-        <button class="rbtn green" onclick="resave('${r.name}')">🔄 Оновити в боті</button>
-        <button class="rbtn" onclick="delLocal('${r.name}')">🗑️ Видалити</button>
+        <button class="rbtn red" onclick="deleteCmd('${r.name}')">🗑️ Видалити</button>
       </div>
     </div>`).join('');
 }
 
-function resave(name) {
-  const r = localFeed.find(x => x.name === name);
-  if (!r) return;
-  if (tg && tg.sendData) {
-    tg.sendData(JSON.stringify({ action:'save_rp', name:r.name, text:r.text, emoji:r.emoji }));
-  } else {
-    showToast('✅ Відкрий в Telegram!');
-  }
-}
-
-function delLocal(name) {
-  localFeed = localFeed.filter(x => x.name !== name);
-  localStorage.setItem('simon_rp_cmds', JSON.stringify(localFeed));
-  document.getElementById('fcnt').textContent = localFeed.length;
-  renderFeed();
-  showToast('🗑️ Видалено');
+function copyText(text) {
+  if (navigator.clipboard) navigator.clipboard.writeText(text).catch(()=>{});
+  else { const el=document.createElement('textarea'); el.value=text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); }
 }
 
 function switchTab(tab) {
@@ -291,10 +324,11 @@ function switchTab(tab) {
   if (tab==='feed') renderFeed();
 }
 
-function showToast(msg) {
+function showToast(msg, type='') {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.className = 'toast', 2500);
 }
 </script>
 </body>
