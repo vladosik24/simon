@@ -3,117 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Симон — РП</title>
+<title>Симон</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Nunito:wght@400;600;700&display=swap');
-  :root {
-    --bg:#0d0f1a; --surface:#151727; --card:#1c1f35;
-    --border:#2a2e4a; --accent:#7c5cfc; --accent2:#fc5c9c;
-    --text:#e8eaff; --muted:#6b6e99; --green:#22c55e;
-  }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(124,92,252,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.04) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
-  .app { position:relative; z-index:1; max-width:480px; margin:0 auto; padding:16px 12px 100px; }
-  .header { display:flex; align-items:center; gap:10px; padding:16px 0 20px; }
-  .hicon { width:44px; height:44px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:0 0 20px rgba(124,92,252,0.5); flex-shrink:0; }
-  .htitle { font-family:'Unbounded',sans-serif; font-size:18px; font-weight:900; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-  .hsub { font-size:11px; color:var(--muted); margin-top:2px; }
-  .tabs { display:flex; background:var(--surface); border-radius:14px; padding:4px; gap:4px; margin-bottom:20px; border:1px solid var(--border); }
-  .tab { flex:1; padding:9px 6px; border-radius:10px; border:none; background:none; color:var(--muted); font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
-  .tab.active { background:linear-gradient(135deg,var(--accent),#5a3dc4); color:#fff; box-shadow:0 4px 14px rgba(124,92,252,0.4); }
-  .block { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:12px; }
-  .slabel { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
-  .field { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--text); font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; outline:none; transition:border-color .2s; }
-  .field:focus { border-color:var(--accent); }
-  .field::placeholder { color:var(--muted); font-weight:600; font-size:13px; }
-  .hint { font-size:11px; color:var(--muted); margin-top:6px; line-height:1.5; }
-  .hint b { color:var(--accent2); }
-  .egrid { display:flex; flex-wrap:wrap; gap:8px; }
-  .ebtn { width:44px; height:44px; border-radius:12px; border:1px solid var(--border); background:var(--bg); font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; -webkit-tap-highlight-color:transparent; }
-  .ebtn.sel { border-color:var(--accent2); background:rgba(252,92,156,0.15); transform:scale(1.15); box-shadow:0 0 10px rgba(252,92,156,0.4); }
-  .preview { background:rgba(124,92,252,0.08); border:1px solid rgba(124,92,252,0.25); border-radius:14px; padding:14px; margin-bottom:12px; font-size:14px; font-weight:700; line-height:1.7; min-height:54px; }
-  .preview .ph { color:var(--muted); font-weight:600; font-size:13px; }
-  .preview .nm { color:var(--accent); }
-  .preview .tg { color:var(--accent2); }
-  .btn-save { width:100%; padding:14px; background:linear-gradient(135deg,var(--green),#16a34a); border:none; border-radius:14px; color:#fff; font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(34,197,94,0.4); transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px; }
-  .btn-save:disabled { background:var(--border); box-shadow:none; color:var(--muted); cursor:not-allowed; }
-  .spinner { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
-  @keyframes spin { to { transform:rotate(360deg); } }
-  .feed-empty { text-align:center; padding:50px 20px; color:var(--muted); }
-  .feed-empty-icon { font-size:48px; margin-bottom:12px; }
-  .rp-item { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:10px; animation:fin .3s ease; }
-  @keyframes fin { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-  .rp-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
-  .rp-name { font-family:'Unbounded',sans-serif; font-size:12px; font-weight:700; color:var(--accent); }
-  .rp-usage { font-size:11px; color:var(--muted); background:var(--bg); border-radius:6px; padding:4px 8px; display:inline-block; margin-bottom:8px; }
-  .rp-usage code { color:var(--accent2); }
-  .rbtn { background:var(--surface); border:1px solid #ef4444; border-radius:8px; padding:5px 12px; color:#ef4444; background:rgba(239,68,68,0.1); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; }
-  .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--accent); border-radius:12px; padding:10px 20px; font-size:13px; font-weight:700; opacity:0; transition:all .3s; z-index:100; white-space:nowrap; }
-  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-  .toast.success { border-color:var(--green); }
-  .toast.error { border-color:#ef4444; }
-  .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(13,15,26,0.96); backdrop-filter:blur(12px); border-top:1px solid var(--border); padding:10px 20px 16px; display:flex; justify-content:space-around; z-index:50; }
-  .nitem { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; color:var(--muted); font-weight:700; cursor:pointer; background:none; border:none; font-family:'Nunito',sans-serif; padding:4px 12px; }
-  .nitem span { font-size:20px; }
-  .nitem.active { color:var(--accent); }
-  .badge { display:inline-flex; background:var(--accent2); color:#fff; font-size:9px; font-weight:900; padding:1px 5px; border-radius:6px; margin-left:4px; vertical-align:middle; }
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap');
+:root {
+  --bg:#0d0f1a; --surface:#151727; --card:#1c1f35;
+  --border:#2a2e4a; --accent:#7c5cfc; --accent2:#fc5c9c;
+  --text:#e8eaff; --muted:#6b6e99; --green:#22c55e;
+  --gold:#f59e0b; --red:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(124,92,252,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+/* PAGES */
+.page{display:none;position:relative;z-index:1;max-width:480px;margin:0 auto;padding:12px 12px 90px;}
+.page.active{display:block;}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,15,26,0.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 10px;background:none;border:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;position:relative;}
+.nav-btn span.icon{font-size:22px;}
+.nav-btn.active{color:var(--accent);}
+.nav-btn.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:32px;height:2px;background:var(--accent);border-radius:0 0 4px 4px;}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:12px;}
+.card-grad{background:linear-gradient(135deg,var(--accent),#5a3dc4);border:none;}
+.card-grad2{background:linear-gradient(135deg,#fc5c9c,#c026d3);border:none;}
+.card-gold{background:linear-gradient(135deg,#92400e,#d97706);border:none;}
+
+.section-title{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
+
+/* PROFILE */
+.profile-hero{background:linear-gradient(135deg,#1a1040,#2d1b6e);border:1px solid rgba(124,92,252,0.3);border-radius:20px;padding:20px;margin-bottom:12px;text-align:center;}
+.avatar{width:72px;height:72px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;box-shadow:0 0 24px rgba(124,92,252,0.5);}
+.profile-name{font-family:'Unbounded',sans-serif;font-size:16px;font-weight:900;margin-bottom:4px;}
+.profile-level{font-size:13px;color:var(--muted);margin-bottom:14px;}
+.xp-bar-wrap{background:rgba(255,255,255,0.08);border-radius:8px;height:8px;overflow:hidden;margin-bottom:6px;}
+.xp-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:8px;transition:width .6s ease;}
+.xp-label{font-size:11px;color:var(--muted);text-align:right;}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;}
+.stat-val{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;margin-bottom:4px;}
+.stat-lbl{font-size:11px;color:var(--muted);font-weight:700;}
+
+/* ECONOMY */
+.balance-row{display:flex;gap:10px;margin-bottom:12px;}
+.bal-card{flex:1;border-radius:16px;padding:16px;text-align:center;}
+.bal-icon{font-size:28px;margin-bottom:6px;}
+.bal-val{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;}
+.bal-lbl{font-size:11px;opacity:0.8;margin-top:2px;}
+
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.action-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;color:var(--text);}
+.action-btn:active{transform:scale(0.95);}
+.action-btn .aicon{font-size:26px;}
+.action-btn .albl{font-size:12px;font-weight:700;}
+
+.transfer-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:12px;}
+.field{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;outline:none;transition:border-color .2s;margin-bottom:8px;}
+.field:focus{border-color:var(--accent);}
+.field::placeholder{color:var(--muted);font-size:13px;}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;color:#fff;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#5a3dc4);box-shadow:0 4px 14px rgba(124,92,252,0.4);}
+.btn-green{background:linear-gradient(135deg,var(--green),#16a34a);box-shadow:0 4px 14px rgba(34,197,94,0.3);}
+.btn-red{background:linear-gradient(135deg,var(--red),#b91c1c);}
+.btn:disabled{background:var(--border);box-shadow:none;color:var(--muted);cursor:not-allowed;}
+
+/* TOP */
+.top-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.top-pos{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:900;width:28px;text-align:center;flex-shrink:0;}
+.top-pos.gold{color:var(--gold);}
+.top-pos.silver{color:#94a3b8;}
+.top-pos.bronze{color:#cd7c2f;}
+.top-info{flex:1;}
+.top-name{font-weight:800;font-size:14px;margin-bottom:2px;}
+.top-sub{font-size:11px;color:var(--muted);}
+.top-val{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:900;color:var(--accent);}
+
+.top-tabs{display:flex;background:var(--surface);border-radius:12px;padding:3px;gap:3px;margin-bottom:14px;border:1px solid var(--border);}
+.top-tab{flex:1;padding:8px 4px;border-radius:9px;border:none;background:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+.top-tab.active{background:var(--accent);color:#fff;}
+
+/* RP */
+.egrid{display:flex;flex-wrap:wrap;gap:6px;}
+.ebtn{width:42px;height:42px;border-radius:10px;border:1px solid var(--border);background:var(--bg);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.ebtn.sel{border-color:var(--accent2);background:rgba(252,92,156,0.15);transform:scale(1.12);box-shadow:0 0 8px rgba(252,92,156,0.4);}
+.preview-box{background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2);border-radius:12px;padding:12px;min-height:48px;font-size:14px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.preview-box .ph{color:var(--muted);font-size:13px;font-weight:600;}
+.rp-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;animation:fin .3s ease;}
+@keyframes fin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.rp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.rp-name{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:var(--accent);}
+.rp-text{font-size:12px;color:#c8cbf0;margin-bottom:6px;}
+.rp-del{background:rgba(239,68,68,0.1);border:1px solid var(--red);border-radius:7px;padding:4px 10px;color:var(--red);font-size:11px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
+
+/* LOADING */
+.loading{text-align:center;padding:40px 20px;color:var(--muted);}
+.spin{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* TOAST */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:10px 18px;font-size:13px;font-weight:700;opacity:0;transition:all .25s;z-index:200;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:var(--green);}
+.toast.err{border-color:var(--red);}
+
+/* SPINNER inline */
+.sp{display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+
+.hint{font-size:11px;color:var(--muted);margin-top:4px;margin-bottom:8px;}
+.hint b{color:var(--accent2);}
+.badge{display:inline-flex;background:var(--accent2);color:#fff;font-size:9px;font-weight:900;padding:1px 5px;border-radius:5px;margin-left:3px;vertical-align:middle;}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <div class="hicon">⚔️</div>
-    <div>
-      <div class="htitle">СИМОН РП</div>
-      <div class="hsub">Створення РП команд</div>
+
+<!-- PAGE: PROFILE -->
+<div class="page active" id="p-profile">
+  <div class="profile-hero">
+    <div class="avatar" id="av">👤</div>
+    <div class="profile-name" id="pr-name">Завантаження…</div>
+    <div class="profile-level" id="pr-level">—</div>
+    <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
+    <div class="xp-label" id="xp-label">0 XP</div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="pr-wins">—</div><div class="stat-lbl">🏆 Перемог</div></div>
+    <div class="stat-card"><div class="stat-val" id="pr-games">—</div><div class="stat-lbl">🎮 Ігор</div></div>
+    <div class="stat-card"><div class="stat-val" id="pr-coins">—</div><div class="stat-lbl">💰 Монет</div></div>
+    <div class="stat-card"><div class="stat-val" id="pr-achs">—</div><div class="stat-lbl">🏅 Досягнень</div></div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div class="section-title">🔥 Стрік фарму</div>
+    <div style="font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;color:var(--accent2)" id="pr-streak">—</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">днів поспіль</div>
+  </div>
+  <button class="btn btn-accent" onclick="loadProfile()" style="margin-top:4px">🔄 Оновити профіль</button>
+</div>
+
+<!-- PAGE: ECONOMY -->
+<div class="page" id="p-economy">
+  <div class="balance-row">
+    <div class="bal-card card-grad">
+      <div class="bal-icon">💰</div>
+      <div class="bal-val" id="ec-coins">—</div>
+      <div class="bal-lbl">Монети</div>
+    </div>
+    <div class="bal-card card-gold">
+      <div class="bal-icon">🏦</div>
+      <div class="bal-val" id="ec-dep">—</div>
+      <div class="bal-lbl">Депозит</div>
     </div>
   </div>
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('create')" id="tab-create">➕ Нова команда</button>
-    <button class="tab" onclick="switchTab('feed')" id="tab-feed">📜 Мої РП <span class="badge" id="fcnt">0</span></button>
+  <div class="action-grid">
+    <button class="action-btn" onclick="doAction('фарм')"><span class="aicon">🌾</span><span class="albl">Фарм</span></button>
+    <button class="action-btn" onclick="doAction('відсотки')"><span class="aicon">📈</span><span class="albl">Відсотки</span></button>
+    <button class="action-btn" onclick="doAction('рулетка 50')"><span class="aicon">🎰</span><span class="albl">Рулетка</span></button>
+    <button class="action-btn" onclick="doAction('щоденний бонус')"><span class="action-btn"><span class="aicon">🎁</span><span class="albl">Бонус</span></span></button>
   </div>
-  <div id="page-create">
-    <div class="block">
-      <div class="slabel">🏷️ Назва команди</div>
-      <input class="field" id="f-name" placeholder="Наприклад: кусь, обійми, атака…" oninput="upPrev()">
-      <div class="hint">Це слово пишеш в групі щоб викликати РП</div>
+
+  <div class="transfer-box">
+    <div class="section-title">💸 Переказ монет</div>
+    <input class="field" id="tr-id" placeholder="ID отримувача (числа)" type="number">
+    <input class="field" id="tr-amount" placeholder="Сума монет" type="number">
+    <button class="btn btn-green" onclick="doTransfer()">💸 Переказати</button>
+  </div>
+
+  <div class="transfer-box">
+    <div class="section-title">🏦 Банк</div>
+    <input class="field" id="bank-amount" placeholder="Сума монет" type="number">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button class="btn btn-accent" onclick="doBankAction('покласти')">📥 Покласти</button>
+      <button class="btn btn-red" onclick="doBankAction('зняти')">📤 Зняти</button>
     </div>
-    <div class="block">
-      <div class="slabel">✏️ Текст РП</div>
-      <input class="field" id="f-text" placeholder="{від} вкусив {до} за вухо" oninput="upPrev()">
-      <div class="hint"><b>{від}</b> — твоє ім'я &nbsp;|&nbsp; <b>{до}</b> — ім'я цілі (reply)</div>
+  </div>
+
+  <button class="btn btn-accent" onclick="loadBalance()" style="margin-top:4px">🔄 Оновити баланс</button>
+</div>
+
+<!-- PAGE: TOP -->
+<div class="page" id="p-top">
+  <div class="top-tabs">
+    <button class="top-tab active" onclick="switchTop('xp',this)">⚡ XP</button>
+    <button class="top-tab" onclick="switchTop('coins',this)">💰 Монети</button>
+    <button class="top-tab" onclick="switchTop('wins',this)">🏆 Перемоги</button>
+  </div>
+  <div id="top-list"><div class="loading"><div class="spin"></div>Завантаження…</div></div>
+  <button class="btn btn-accent" onclick="loadTop()" style="margin-top:4px">🔄 Оновити топ</button>
+</div>
+
+<!-- PAGE: RP -->
+<div class="page" id="p-rp">
+  <div style="display:flex;gap:8px;margin-bottom:14px">
+    <button class="btn btn-accent" onclick="switchRpTab('create')" id="rp-tab-create" style="flex:1;padding:10px">➕ Нова</button>
+    <button class="btn" onclick="switchRpTab('list')" id="rp-tab-list" style="flex:1;padding:10px;background:var(--card);color:var(--muted)">📜 Мої РП <span class="badge" id="rp-cnt">0</span></button>
+  </div>
+
+  <div id="rp-create">
+    <div class="card">
+      <div class="section-title">🏷️ Назва команди</div>
+      <input class="field" id="rp-name" placeholder="кусь, обійми, атака…" oninput="upRpPrev()">
+      <div class="hint">Пишеш це слово в групі щоб викликати РП</div>
     </div>
-    <div class="block">
-      <div class="slabel">😊 Емодзі</div>
+    <div class="card">
+      <div class="section-title">✏️ Текст РП</div>
+      <input class="field" id="rp-text" placeholder="{від} вкусив {до} за вухо" oninput="upRpPrev()">
+      <div class="hint"><b>{від}</b> — твоє ім'я &nbsp;|&nbsp; <b>{до}</b> — ціль (reply)</div>
+    </div>
+    <div class="card">
+      <div class="section-title">😊 Емодзі</div>
       <div class="egrid" id="emo-grid"></div>
     </div>
-    <div class="block" style="margin-bottom:12px">
-      <div class="slabel">👁 Превью</div>
-      <div class="preview" id="preview"><span class="ph">Заповни поля…</span></div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="section-title">👁 Превью</div>
+      <div class="preview-box" id="rp-prev"><span class="ph">Заповни поля…</span></div>
     </div>
-    <button class="btn-save" id="btn-save" onclick="saveCmd()" disabled>
-      <span class="spinner" id="spinner"></span>
-      <span id="btn-label">💾 Зберегти в бота</span>
+    <button class="btn btn-green" id="rp-save-btn" onclick="saveRp()" disabled style="display:flex;align-items:center;justify-content:center;gap:8px">
+      <span class="sp" id="rp-sp"></span>
+      <span id="rp-save-lbl">💾 Зберегти в бота</span>
     </button>
   </div>
-  <div id="page-feed" style="display:none">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div class="slabel" style="margin-bottom:0">Мої РП команди</div>
-    </div>
-    <div id="feed-list"></div>
+
+  <div id="rp-list" style="display:none">
+    <div id="rp-items"></div>
   </div>
 </div>
-<div class="bottom-nav">
-  <button class="nitem active" id="nav-create" onclick="switchTab('create')"><span>➕</span>Нова</button>
-  <button class="nitem" id="nav-feed" onclick="switchTab('feed')"><span>📜</span>Мої РП</button>
-</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" id="nav-profile" onclick="goPage('profile')">
+    <span class="icon">👤</span>Профіль
+  </button>
+  <button class="nav-btn" id="nav-economy" onclick="goPage('economy')">
+    <span class="icon">💰</span>Економіка
+  </button>
+  <button class="nav-btn" id="nav-top" onclick="goPage('top')">
+    <span class="icon">📊</span>Топи
+  </button>
+  <button class="nav-btn" id="nav-rp" onclick="goPage('rp')">
+    <span class="icon">🎭</span>РП
+  </button>
+</nav>
+
 <div class="toast" id="toast"></div>
+
 <script>
 const BOT_TOKEN = '8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q';
 const API = 'https://api.telegram.org/bot' + BOT_TOKEN;
-const KEY = 'simon_rp_v2';
+const RP_KEY = 'simon_rp_v2';
 
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
@@ -124,108 +265,311 @@ if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
   myName = tg.initDataUnsafe.user.first_name || 'Влад';
 }
 
-function getCmds() { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { return {}; } }
-function setCmds(c) { localStorage.setItem(KEY, JSON.stringify(c)); document.getElementById('fcnt').textContent = Object.keys(c).length; }
+// ===== NAVIGATION =====
+let curPage = 'profile';
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  curPage = name;
+  if (name === 'profile' && document.getElementById('pr-name').textContent === 'Завантаження…') loadProfile();
+  if (name === 'economy' && document.getElementById('ec-coins').textContent === '—') loadBalance();
+  if (name === 'top') loadTop();
+  if (name === 'rp') renderRpList();
+}
 
+// ===== SEND TO BOT =====
+async function sendMsg(text) {
+  if (!myId) return null;
+  const r = await fetch(API + '/sendMessage', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: myId, text })
+  });
+  return r.json();
+}
+
+// ===== WAIT FOR BOT RESPONSE =====
+async function waitResponse(prefix, timeout=4000) {
+  if (!myId) return null;
+  const start = Date.now();
+  // Відправляємо, чекаємо, читаємо через getUpdates
+  // Оскільки webhook зайнятий — читаємо через offset
+  await new Promise(r => setTimeout(r, timeout));
+  // Зберігаємо в localStorage після відповіді бота
+  return null;
+}
+
+// ===== PROFILE =====
+const LEVELS = [[0,"Новачок"],[200,"Учень"],[500,"Гравець"],[1000,"Досвідчений"],[2000,"Майстер"],[4000,"Легенда"],[8000,"Герой"],[15000,"Зірка"],[30000,"Елітний"],[60000,"Симон"]];
+const AVATARS = ["🥉","🥈","🥇","💎","🏆","👑","⚡","🌟","🔥","🎖"];
+
+async function loadProfile() {
+  // Беремо з localStorage якщо є
+  const cached = localStorage.getItem('simon_profile');
+  if (cached) {
+    try { renderProfile(JSON.parse(cached)); } catch(e) {}
+  }
+
+  if (!myId) return;
+  await sendMsg('профіль json');
+  // Чекаємо поки бот надішле і читаємо з getUpdates
+  await new Promise(r => setTimeout(r, 2500));
+  try {
+    const res  = await fetch(API + '/getUpdates?limit=30&timeout=0');
+    const data = await res.json();
+    if (!data.ok) return;
+    const updates = data.result || [];
+    for (let i = updates.length - 1; i >= 0; i--) {
+      const msg = updates[i].message;
+      if (msg && String(msg.chat.id) === myId && msg.text && msg.text.startsWith('PROFILE_JSON:')) {
+        const p = JSON.parse(msg.text.replace('PROFILE_JSON:', '').trim());
+        localStorage.setItem('simon_profile', JSON.stringify(p));
+        renderProfile(p);
+        return;
+      }
+    }
+  } catch(e) {}
+}
+
+function renderProfile(p) {
+  const lv = p.level || 0;
+  document.getElementById('pr-name').textContent = p.name || myName;
+  document.getElementById('pr-level').textContent = AVATARS[lv] + ' ' + (p.level_name || 'Новачок');
+  document.getElementById('av').textContent = AVATARS[lv];
+  document.getElementById('pr-wins').textContent = p.wins || 0;
+  document.getElementById('pr-games').textContent = p.games || 0;
+  document.getElementById('pr-coins').textContent = p.coins || 0;
+  document.getElementById('pr-achs').textContent = p.achievements || 0;
+  document.getElementById('pr-streak').textContent = p.farm_streak || 0;
+
+  // XP bar
+  const xp = p.xp || 0;
+  const cur = LEVELS[lv] ? LEVELS[lv][0] : 0;
+  const nxt = LEVELS[lv+1] ? LEVELS[lv+1][0] : cur + 1;
+  const pct = lv >= LEVELS.length-1 ? 100 : Math.min(100, Math.round((xp-cur)/(nxt-cur)*100));
+  document.getElementById('xp-bar').style.width = pct + '%';
+  document.getElementById('xp-label').textContent = xp + ' XP' + (lv < LEVELS.length-1 ? ' / ' + nxt : ' MAX');
+}
+
+// ===== BALANCE =====
+async function loadBalance() {
+  const cached = localStorage.getItem('simon_balance');
+  if (cached) { try { renderBalance(JSON.parse(cached)); } catch(e) {} }
+
+  if (!myId) return;
+  await sendMsg('баланс json');
+  await new Promise(r => setTimeout(r, 2500));
+  try {
+    const res  = await fetch(API + '/getUpdates?limit=30&timeout=0');
+    const data = await res.json();
+    if (!data.ok) return;
+    const updates = data.result || [];
+    for (let i = updates.length - 1; i >= 0; i--) {
+      const msg = updates[i].message;
+      if (msg && String(msg.chat.id) === myId && msg.text && msg.text.startsWith('BALANCE_JSON:')) {
+        const b = JSON.parse(msg.text.replace('BALANCE_JSON:', '').trim());
+        localStorage.setItem('simon_balance', JSON.stringify(b));
+        renderBalance(b);
+        return;
+      }
+    }
+  } catch(e) {}
+}
+
+function renderBalance(b) {
+  document.getElementById('ec-coins').textContent = b.coins ?? '—';
+  document.getElementById('ec-dep').textContent   = b.deposit ?? '—';
+}
+
+async function doAction(cmd) {
+  if (!myId) { showToast('❌ Відкрий в Telegram!', 'err'); return; }
+  await sendMsg(cmd);
+  showToast('✅ Команду відправлено боту!', 'ok');
+  setTimeout(loadBalance, 3000);
+}
+
+async function doTransfer() {
+  const toId   = document.getElementById('tr-id').value.trim();
+  const amount = document.getElementById('tr-amount').value.trim();
+  if (!toId || !amount) { showToast('❌ Заповни ID та суму', 'err'); return; }
+  await sendMsg('переказати ' + amount);
+  showToast('💸 Команду відправлено! Reply в боті на потрібного юзера', 'ok');
+}
+
+async function doBankAction(action) {
+  const amount = document.getElementById('bank-amount').value.trim();
+  if (!amount) { showToast('❌ Введи суму', 'err'); return; }
+  await sendMsg(action + ' ' + amount);
+  showToast('🏦 Виконано!', 'ok');
+  setTimeout(loadBalance, 3000);
+}
+
+// ===== TOP =====
+let topData = null, topMode = 'xp';
+
+async function loadTop() {
+  document.getElementById('top-list').innerHTML = '<div class="loading"><div class="spin"></div>Завантаження…</div>';
+
+  const cached = localStorage.getItem('simon_top');
+  if (cached) { try { topData = JSON.parse(cached); renderTop(); } catch(e) {} }
+
+  if (!myId) return;
+  await sendMsg('топ json');
+  await new Promise(r => setTimeout(r, 2500));
+  try {
+    const res  = await fetch(API + '/getUpdates?limit=30&timeout=0');
+    const data = await res.json();
+    if (!data.ok) return;
+    const updates = data.result || [];
+    for (let i = updates.length - 1; i >= 0; i--) {
+      const msg = updates[i].message;
+      if (msg && String(msg.chat.id) === myId && msg.text && msg.text.startsWith('TOP_JSON:')) {
+        topData = JSON.parse(msg.text.replace('TOP_JSON:', '').trim());
+        localStorage.setItem('simon_top', JSON.stringify(topData));
+        renderTop();
+        return;
+      }
+    }
+  } catch(e) {}
+
+  if (!topData) {
+    document.getElementById('top-list').innerHTML = '<div class="loading">Дані завантажуються…<br><small>Відкрий застосунок з приватного чату з ботом</small></div>';
+  }
+}
+
+function switchTop(mode, btn) {
+  topMode = mode;
+  document.querySelectorAll('.top-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (topData) renderTop();
+}
+
+function renderTop() {
+  if (!topData || !topData.length) {
+    document.getElementById('top-list').innerHTML = '<div class="loading">Немає даних</div>';
+    return;
+  }
+  const sorted = [...topData].sort((a,b) => (b[topMode]||0) - (a[topMode]||0));
+  const medals = ['🥇','🥈','🥉'];
+  const posClass = ['gold','silver','bronze'];
+  const valLabel = {xp:'XP', coins:'💰', wins:'🏆'};
+
+  document.getElementById('top-list').innerHTML = sorted.map((p, i) => `
+    <div class="top-item">
+      <div class="top-pos ${posClass[i]||''}">${medals[i] || (i+1)}</div>
+      <div class="top-info">
+        <div class="top-name">${p.name}</div>
+        <div class="top-sub">🎮 ${p.games||0} ігор · 🏆 ${p.wins||0} перемог</div>
+      </div>
+      <div class="top-val">${p[topMode]||0} ${valLabel[topMode]}</div>
+    </div>`).join('');
+}
+
+// ===== RP =====
 const EMOJIS = ['💕','🥰','😘','💋','🫂','❤️','👊','💥','⚔️','😤','🔥','💢','😡','🦵','💪','🌿','💊','🛏️','🌙','☕','🎉','😜','🎈','🥳','😂','💃','🕺','😢','😔','💔','😭','⚡','🎭','🌟','💫','🔮','🎯','🌀','👀','😏','🤗','🫶','✨','🩷','😈','🫠','🤭','💀','🐾','🌸'];
 let selEmo = null;
 
 document.getElementById('emo-grid').innerHTML = EMOJIS.map(e => `<button class="ebtn" onclick="pickEmo('${e}',this)">${e}</button>`).join('');
-document.getElementById('fcnt').textContent = Object.keys(getCmds()).length;
+
+function getCmds() { try { return JSON.parse(localStorage.getItem(RP_KEY)||'{}'); } catch(e) { return {}; } }
+function setCmds(c) { localStorage.setItem(RP_KEY, JSON.stringify(c)); document.getElementById('rp-cnt').textContent = Object.keys(c).length; }
+
+document.getElementById('rp-cnt').textContent = Object.keys(getCmds()).length;
 
 function pickEmo(e, btn) {
   selEmo = e;
   document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
-  upPrev(); upBtn();
+  upRpPrev(); upRpBtn();
 }
-function upPrev() {
-  const name = document.getElementById('f-name').value.trim();
-  const text = document.getElementById('f-text').value.trim();
-  const box  = document.getElementById('preview');
-  if (!name && !text) { box.innerHTML = '<span class="ph">Заповни поля…</span>'; upBtn(); return; }
+function upRpPrev() {
+  const name = document.getElementById('rp-name').value.trim();
+  const text = document.getElementById('rp-text').value.trim();
+  const box  = document.getElementById('rp-prev');
+  if (!name && !text) { box.innerHTML = '<span class="ph">Заповни поля…</span>'; upRpBtn(); return; }
   const emo = selEmo || '🎭';
-  box.innerHTML = emo + ' ' + (text||'…').replace(/{від}/g,`<span class="nm">${myName}</span>`).replace(/{до}/g,'<span class="tg">@Валя</span>');
-  upBtn();
+  box.innerHTML = emo + ' ' + (text||'…')
+    .replace(/{від}/g, `<b style="color:#7c5cfc">${myName}</b>`)
+    .replace(/{до}/g,  '<b style="color:#fc5c9c">@Валя</b>');
+  upRpBtn();
 }
-function upBtn() {
-  document.getElementById('btn-save').disabled = !(document.getElementById('f-name').value.trim() && document.getElementById('f-text').value.trim() && selEmo);
+function upRpBtn() {
+  document.getElementById('rp-save-btn').disabled = !(document.getElementById('rp-name').value.trim() && document.getElementById('rp-text').value.trim() && selEmo);
 }
 
-async function saveCmd() {
-  const name = document.getElementById('f-name').value.trim().toLowerCase();
-  const text = document.getElementById('f-text').value.trim();
+async function saveRp() {
+  const name = document.getElementById('rp-name').value.trim().toLowerCase();
+  const text = document.getElementById('rp-text').value.trim();
   if (!name || !text || !selEmo) return;
-  setLoading(true);
+  document.getElementById('rp-save-btn').disabled = true;
+  document.getElementById('rp-sp').style.display = 'block';
+  document.getElementById('rp-save-lbl').textContent = 'Зберігаємо…';
   try {
-    if (myId) {
-      await fetch(API + '/sendMessage', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({chat_id: myId, text: 'створити рп ' + name + ' | ' + text + ' | ' + selEmo})
-      });
-    }
-    const cmds = getCmds();
-    cmds[name] = {text, emoji: selEmo};
-    setCmds(cmds);
-    showToast('✅ Збережено! Пиши "' + name + '" в групі', 'success');
-    document.getElementById('f-name').value = '';
-    document.getElementById('f-text').value = '';
+    if (myId) await sendMsg('створити рп ' + name + ' | ' + text + ' | ' + selEmo);
+    const cmds = getCmds(); cmds[name] = {text, emoji: selEmo}; setCmds(cmds);
+    showToast('✅ Збережено! Пиши "' + name + '" в групі', 'ok');
+    document.getElementById('rp-name').value = '';
+    document.getElementById('rp-text').value = '';
     selEmo = null;
     document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
-    document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля…</span>';
-    upBtn();
-  } catch(e) {
-    showToast('❌ ' + e.message, 'error');
-  } finally { setLoading(false); }
-}
-
-async function deleteCmd(name) {
-  if (myId) {
-    try { await fetch(API + '/sendMessage', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:myId,text:'видалити рп '+name})}); } catch(e) {}
+    document.getElementById('rp-prev').innerHTML = '<span class="ph">Заповни поля…</span>';
+    upRpBtn();
+  } catch(e) { showToast('❌ Помилка', 'err'); }
+  finally {
+    document.getElementById('rp-sp').style.display = 'none';
+    document.getElementById('rp-save-lbl').textContent = '💾 Зберегти в бота';
+    upRpBtn();
   }
-  const cmds = getCmds();
-  delete cmds[name];
-  setCmds(cmds);
-  renderFeed();
-  showToast('🗑️ Видалено', 'success');
 }
 
-function renderFeed() {
+async function deleteRp(name) {
+  if (myId) { try { await sendMsg('видалити рп ' + name); } catch(e) {} }
+  const cmds = getCmds(); delete cmds[name]; setCmds(cmds);
+  renderRpList();
+  showToast('🗑️ Видалено', 'ok');
+}
+
+function renderRpList() {
   const cmds = getCmds();
-  const el   = document.getElementById('feed-list');
   const list = Object.entries(cmds);
+  document.getElementById('rp-cnt').textContent = list.length;
+  const el = document.getElementById('rp-items');
   if (!list.length) {
-    el.innerHTML = `<div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Ще немає команд.<br>Створи першу!</div></div>`;
+    el.innerHTML = '<div class="loading">🎭<br><br>Ще немає команд.<br>Створи першу!</div>';
     return;
   }
   el.innerHTML = list.map(([name, d]) => `
     <div class="rp-item">
       <div class="rp-top"><span class="rp-name">${name}</span><span>${d.emoji||'🎭'}</span></div>
-      <div style="font-size:13px;color:#c8cbf0;margin-bottom:6px">${d.text||''}</div>
-      <div class="rp-usage">В групі: <code>${name}</code> + reply</div>
-      <div><button class="rbtn" onclick="deleteCmd('${name}')">🗑️ Видалити</button></div>
+      <div class="rp-text">${d.text||''}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:11px;color:var(--muted)">В групі: <code style="color:var(--accent2)">${name}</code> + reply</span>
+        <button class="rp-del" onclick="deleteRp('${name}')">🗑️</button>
+      </div>
     </div>`).join('');
 }
 
-function setLoading(on) {
-  document.getElementById('btn-save').disabled = on;
-  document.getElementById('spinner').style.display = on ? 'block' : 'none';
-  document.getElementById('btn-label').textContent = on ? 'Зберігаємо…' : '💾 Зберегти в бота';
+function switchRpTab(tab) {
+  document.getElementById('rp-create').style.display = tab==='create' ? '' : 'none';
+  document.getElementById('rp-list').style.display   = tab==='list'   ? '' : 'none';
+  document.getElementById('rp-tab-create').style.background = tab==='create' ? '' : 'var(--card)';
+  document.getElementById('rp-tab-create').style.color = tab==='create' ? '' : 'var(--muted)';
+  document.getElementById('rp-tab-list').style.background = tab==='list' ? 'var(--accent)' : 'var(--card)';
+  document.getElementById('rp-tab-list').style.color = tab==='list' ? '#fff' : 'var(--muted)';
+  if (tab==='list') renderRpList();
 }
-function switchTab(tab) {
-  document.getElementById('page-create').style.display = tab==='create' ? '' : 'none';
-  document.getElementById('page-feed').style.display   = tab==='feed'   ? '' : 'none';
-  document.getElementById('tab-create').classList.toggle('active', tab==='create');
-  document.getElementById('tab-feed').classList.toggle('active', tab==='feed');
-  document.getElementById('nav-create').classList.toggle('active', tab==='create');
-  document.getElementById('nav-feed').classList.toggle('active', tab==='feed');
-  if (tab === 'feed') renderFeed();
-}
+
+// ===== TOAST =====
 function showToast(msg, type='') {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast show' + (type ? ' '+type : '');
   setTimeout(() => t.className = 'toast', 2500);
 }
+
+// Init
+loadProfile();
 </script>
 </body>
 </html>
