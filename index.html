@@ -317,16 +317,29 @@ if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
 const LEVELS = [[0,"Новачок"],[200,"Учень"],[500,"Гравець"],[1000,"Досвідчений"],[2000,"Майстер"],[4000,"Легенда"],[8000,"Герой"],[15000,"Зірка"],[30000,"Елітний"],[60000,"Симон"]];
 const AVATARS = ["🥉","🥈","🥇","💎","🏆","👑","⚡","🌟","🔥","🎖"];
 
+// Команди які працюють тільки в групі
+const GROUP_CMDS = ['пара дня','шлюб','топ пари','одружитись','розлучитись','дружити з','посваритись з','стосунки з','сумісність з','+реп','-реп','реп','топ репутації','покликати боса','атакувати','магія','важкий удар','стрільба','бос','топ боса','мій клан','топ кланів','статистика чату','тиждень','правда чи дія','комплімент'];
+
 // ===== SEND MESSAGE TO BOT =====
 async function send(text) {
   if (!myId) { showToast('❌ Відкрий в Telegram!', 'err'); return; }
+
+  // Перевіряємо чи групова команда
+  const isGroup = GROUP_CMDS.some(c => text === c || text.startsWith(c + ' '));
+  if (isGroup) {
+    // Копіюємо в буфер і показуємо підказку
+    try { await navigator.clipboard.writeText(text); } catch(e) {}
+    showToast('📋 Скопійовано! Встав в груповий чат', 'ok');
+    return;
+  }
+
   try {
     await fetch(API + '/sendMessage', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: myId, text })
     });
-    showToast('✅ Команду відправлено!', 'ok');
+    showToast('✅ Команду відправлено боту!', 'ok');
   } catch(e) {
     showToast('❌ Помилка', 'err');
   }
