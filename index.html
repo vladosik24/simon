@@ -14,79 +14,46 @@
   }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-  body::before {
-    content:''; position:fixed; inset:0;
-    background-image:linear-gradient(rgba(124,92,252,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.04) 1px,transparent 1px);
-    background-size:40px 40px; pointer-events:none; z-index:0;
-  }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(124,92,252,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.04) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
   .app { position:relative; z-index:1; max-width:480px; margin:0 auto; padding:16px 12px 100px; }
-
   .header { display:flex; align-items:center; gap:10px; padding:16px 0 20px; }
   .hicon { width:44px; height:44px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:0 0 20px rgba(124,92,252,0.5); flex-shrink:0; }
   .htitle { font-family:'Unbounded',sans-serif; font-size:18px; font-weight:900; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
   .hsub { font-size:11px; color:var(--muted); margin-top:2px; }
-
   .tabs { display:flex; background:var(--surface); border-radius:14px; padding:4px; gap:4px; margin-bottom:20px; border:1px solid var(--border); }
   .tab { flex:1; padding:9px 6px; border-radius:10px; border:none; background:none; color:var(--muted); font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
   .tab.active { background:linear-gradient(135deg,var(--accent),#5a3dc4); color:#fff; box-shadow:0 4px 14px rgba(124,92,252,0.4); }
-
   .block { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:12px; }
   .slabel { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
-
   .field { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--text); font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; outline:none; transition:border-color .2s; }
   .field:focus { border-color:var(--accent); }
   .field::placeholder { color:var(--muted); font-weight:600; font-size:13px; }
   .hint { font-size:11px; color:var(--muted); margin-top:6px; line-height:1.5; }
   .hint b { color:var(--accent2); }
-
   .egrid { display:flex; flex-wrap:wrap; gap:8px; }
   .ebtn { width:44px; height:44px; border-radius:12px; border:1px solid var(--border); background:var(--bg); font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; -webkit-tap-highlight-color:transparent; }
   .ebtn.sel { border-color:var(--accent2); background:rgba(252,92,156,0.15); transform:scale(1.15); box-shadow:0 0 10px rgba(252,92,156,0.4); }
-  .ebtn:active { transform:scale(0.88) !important; }
-
-  .preview { background:rgba(124,92,252,0.08); border:1px solid rgba(124,92,252,0.25); border-radius:14px; padding:14px; margin-bottom:12px; font-size:14px; font-weight:700; line-height:1.7; color:var(--text); min-height:54px; }
+  .preview { background:rgba(124,92,252,0.08); border:1px solid rgba(124,92,252,0.25); border-radius:14px; padding:14px; margin-bottom:12px; font-size:14px; font-weight:700; line-height:1.7; min-height:54px; }
   .preview .ph { color:var(--muted); font-weight:600; font-size:13px; }
   .preview .nm { color:var(--accent); }
   .preview .tg { color:var(--accent2); }
-
-  .btn-save {
-    width:100%; padding:14px; background:linear-gradient(135deg,var(--green),#16a34a);
-    border:none; border-radius:14px; color:#fff;
-    font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700;
-    cursor:pointer; box-shadow:0 6px 20px rgba(34,197,94,0.4);
-    transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;
-  }
-  .btn-save:active { transform:scale(0.97); }
-  .btn-save:disabled { background:var(--border); box-shadow:none; color:var(--muted); cursor:not-allowed; transform:none; }
-
+  .btn-save { width:100%; padding:14px; background:linear-gradient(135deg,var(--green),#16a34a); border:none; border-radius:14px; color:#fff; font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(34,197,94,0.4); transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .btn-save:disabled { background:var(--border); box-shadow:none; color:var(--muted); cursor:not-allowed; }
   .spinner { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
   @keyframes spin { to { transform:rotate(360deg); } }
-
-  .feed-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-  .feed-sync { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; }
-
   .feed-empty { text-align:center; padding:50px 20px; color:var(--muted); }
   .feed-empty-icon { font-size:48px; margin-bottom:12px; }
   .rp-item { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:10px; animation:fin .3s ease; }
   @keyframes fin { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
   .rp-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
   .rp-name { font-family:'Unbounded',sans-serif; font-size:12px; font-weight:700; color:var(--accent); }
-  .rp-emoji { font-size:18px; }
-  .rp-text { font-size:13px; color:#c8cbf0; line-height:1.5; margin-bottom:6px; }
   .rp-usage { font-size:11px; color:var(--muted); background:var(--bg); border-radius:6px; padding:4px 8px; display:inline-block; margin-bottom:8px; }
   .rp-usage code { color:var(--accent2); }
-  .rp-btns { display:flex; gap:8px; }
-  .rbtn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 12px; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; }
-  .rbtn.red { border-color:#ef4444; color:#ef4444; background:rgba(239,68,68,0.1); }
-
-  .loading-block { text-align:center; padding:30px; color:var(--muted); }
-  .loading-spin { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 10px; }
-
+  .rbtn { background:var(--surface); border:1px solid #ef4444; border-radius:8px; padding:5px 12px; color:#ef4444; background:rgba(239,68,68,0.1); font-size:12px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; }
   .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--accent); border-radius:12px; padding:10px 20px; font-size:13px; font-weight:700; opacity:0; transition:all .3s; z-index:100; white-space:nowrap; }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
   .toast.success { border-color:var(--green); }
   .toast.error { border-color:#ef4444; }
-
   .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(13,15,26,0.96); backdrop-filter:blur(12px); border-top:1px solid var(--border); padding:10px 20px 16px; display:flex; justify-content:space-around; z-index:50; }
   .nitem { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; color:var(--muted); font-weight:700; cursor:pointer; background:none; border:none; font-family:'Nunito',sans-serif; padding:4px 12px; }
   .nitem span { font-size:20px; }
@@ -96,7 +63,6 @@
 </head>
 <body>
 <div class="app">
-
   <div class="header">
     <div class="hicon">⚔️</div>
     <div>
@@ -104,13 +70,10 @@
       <div class="hsub">Створення РП команд</div>
     </div>
   </div>
-
   <div class="tabs">
     <button class="tab active" onclick="switchTab('create')" id="tab-create">➕ Нова команда</button>
-    <button class="tab" onclick="switchTab('feed')" id="tab-feed">📜 Мої РП <span class="badge" id="fcnt">…</span></button>
+    <button class="tab" onclick="switchTab('feed')" id="tab-feed">📜 Мої РП <span class="badge" id="fcnt">0</span></button>
   </div>
-
-  <!-- CREATE -->
   <div id="page-create">
     <div class="block">
       <div class="slabel">🏷️ Назва команди</div>
@@ -135,46 +98,40 @@
       <span id="btn-label">💾 Зберегти в бота</span>
     </button>
   </div>
-
-  <!-- FEED -->
   <div id="page-feed" style="display:none">
-    <div class="feed-header">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div class="slabel" style="margin-bottom:0">Мої РП команди</div>
-      <button class="feed-sync" onclick="loadCmds()">🔄 Оновити</button>
     </div>
-    <div id="feed-list">
-      <div class="loading-block"><div class="loading-spin"></div>Завантаження…</div>
-    </div>
+    <div id="feed-list"></div>
   </div>
-
 </div>
-
 <div class="bottom-nav">
   <button class="nitem active" id="nav-create" onclick="switchTab('create')"><span>➕</span>Нова</button>
   <button class="nitem" id="nav-feed" onclick="switchTab('feed')"><span>📜</span>Мої РП</button>
 </div>
 <div class="toast" id="toast"></div>
-
 <script>
 const BOT_TOKEN = '8268677697:AAF2dRwMDrHaopeXU5S2Dt42vDuto4mJD5Q';
 const API = 'https://api.telegram.org/bot' + BOT_TOKEN;
+const KEY = 'simon_rp_v2';
 
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-let myId = null;
-let myName = 'Влад';
+let myId = null, myName = 'Влад';
 if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
   myId   = String(tg.initDataUnsafe.user.id);
   myName = tg.initDataUnsafe.user.first_name || 'Влад';
 }
 
+function getCmds() { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { return {}; } }
+function setCmds(c) { localStorage.setItem(KEY, JSON.stringify(c)); document.getElementById('fcnt').textContent = Object.keys(c).length; }
+
 const EMOJIS = ['💕','🥰','😘','💋','🫂','❤️','👊','💥','⚔️','😤','🔥','💢','😡','🦵','💪','🌿','💊','🛏️','🌙','☕','🎉','😜','🎈','🥳','😂','💃','🕺','😢','😔','💔','😭','⚡','🎭','🌟','💫','🔮','🎯','🌀','👀','😏','🤗','🫶','✨','🩷','😈','🫠','🤭','💀','🐾','🌸'];
 let selEmo = null;
 
-document.getElementById('emo-grid').innerHTML = EMOJIS.map(e =>
-  `<button class="ebtn" onclick="pickEmo('${e}',this)">${e}</button>`
-).join('');
+document.getElementById('emo-grid').innerHTML = EMOJIS.map(e => `<button class="ebtn" onclick="pickEmo('${e}',this)">${e}</button>`).join('');
+document.getElementById('fcnt').textContent = Object.keys(getCmds()).length;
 
 function pickEmo(e, btn) {
   selEmo = e;
@@ -182,156 +139,72 @@ function pickEmo(e, btn) {
   btn.classList.add('sel');
   upPrev(); upBtn();
 }
-
 function upPrev() {
   const name = document.getElementById('f-name').value.trim();
   const text = document.getElementById('f-text').value.trim();
   const box  = document.getElementById('preview');
   if (!name && !text) { box.innerHTML = '<span class="ph">Заповни поля…</span>'; upBtn(); return; }
-  const emo  = selEmo || '🎭';
-  const prev = (text || '…')
-    .replace(/{від}/g,  `<span class="nm">${myName}</span>`)
-    .replace(/{до}/g,   '<span class="tg">@Валя</span>')
-    .replace(/{from}/g, `<span class="nm">${myName}</span>`)
-    .replace(/{to}/g,   '<span class="tg">@Валя</span>');
-  box.innerHTML = emo + ' ' + prev;
+  const emo = selEmo || '🎭';
+  box.innerHTML = emo + ' ' + (text||'…').replace(/{від}/g,`<span class="nm">${myName}</span>`).replace(/{до}/g,'<span class="tg">@Валя</span>');
   upBtn();
 }
-
 function upBtn() {
-  const ok = !!(document.getElementById('f-name').value.trim() &&
-                document.getElementById('f-text').value.trim() && selEmo);
-  document.getElementById('btn-save').disabled = !ok;
+  document.getElementById('btn-save').disabled = !(document.getElementById('f-name').value.trim() && document.getElementById('f-text').value.trim() && selEmo);
 }
 
-// ===== ЗБЕРЕГТИ — відправляємо команду боту =====
 async function saveCmd() {
   const name = document.getElementById('f-name').value.trim().toLowerCase();
   const text = document.getElementById('f-text').value.trim();
   if (!name || !text || !selEmo) return;
-
   setLoading(true);
   try {
-    if (!myId) throw new Error('Відкрий в Telegram!');
-
-    const cmdText = 'створити рп ' + name + ' | ' + text + ' | ' + selEmo;
-    const res = await fetch(API + '/sendMessage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: myId, text: cmdText })
-    });
-    const data = await res.json();
-
-    if (data.ok) {
-      showToast('✅ Збережено! Пиши "' + name + '" в групі', 'success');
-      document.getElementById('f-name').value = '';
-      document.getElementById('f-text').value = '';
-      selEmo = null;
-      document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
-      document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля…</span>';
-      upBtn();
-    } else {
-      throw new Error(data.description || 'помилка');
+    if (myId) {
+      await fetch(API + '/sendMessage', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({chat_id: myId, text: 'створити рп ' + name + ' | ' + text + ' | ' + selEmo})
+      });
     }
+    const cmds = getCmds();
+    cmds[name] = {text, emoji: selEmo};
+    setCmds(cmds);
+    showToast('✅ Збережено! Пиши "' + name + '" в групі', 'success');
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-text').value = '';
+    selEmo = null;
+    document.querySelectorAll('.ebtn').forEach(b => b.classList.remove('sel'));
+    document.getElementById('preview').innerHTML = '<span class="ph">Заповни поля…</span>';
+    upBtn();
   } catch(e) {
     showToast('❌ ' + e.message, 'error');
-  } finally {
-    setLoading(false);
-  }
+  } finally { setLoading(false); }
 }
 
-// ===== ЗАВАНТАЖИТИ КОМАНДИ — питаємо бота =====
-async function loadCmds() {
-  document.getElementById('feed-list').innerHTML =
-    '<div class="loading-block"><div class="loading-spin"></div>Завантаження…</div>';
-
-  try {
-    if (!myId) throw new Error('no_id');
-
-    // 1. Відправляємо запит боту
-    await fetch(API + '/sendMessage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: myId, text: 'мої рп json' })
-    });
-
-    // 2. Чекаємо 2 секунди
-    await new Promise(r => setTimeout(r, 2000));
-
-    // 3. Читаємо останні повідомлення
-    const res = await fetch(API + '/getUpdates?limit=20&timeout=0');
-    const data = await res.json();
-
-    if (!data.ok) throw new Error('API error');
-
-    // 4. Шукаємо повідомлення з RP_JSON від бота
-    let rpData = null;
-    const updates = data.result || [];
-    for (let i = updates.length - 1; i >= 0; i--) {
-      const msg = updates[i].message;
-      if (msg && msg.chat && String(msg.chat.id) === myId &&
-          msg.text && msg.text.startsWith('RP_JSON:')) {
-        try {
-          const jsonStr = msg.text.replace('RP_JSON:', '').trim();
-          rpData = JSON.parse(jsonStr);
-        } catch(e) {}
-        break;
-      }
-    }
-
-    if (!rpData) {
-      // Немає даних
-      renderFeed({});
-      return;
-    }
-
-    renderFeed(rpData);
-    document.getElementById('fcnt').textContent = Object.keys(rpData).length;
-
-  } catch(e) {
-    document.getElementById('feed-list').innerHTML =
-      '<div class="feed-empty"><div class="feed-empty-icon">❌</div><div>Помилка. Натисни 🔄</div></div>';
+async function deleteCmd(name) {
+  if (myId) {
+    try { await fetch(API + '/sendMessage', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:myId,text:'видалити рп '+name})}); } catch(e) {}
   }
+  const cmds = getCmds();
+  delete cmds[name];
+  setCmds(cmds);
+  renderFeed();
+  showToast('🗑️ Видалено', 'success');
 }
 
-function renderFeed(cmds) {
-  const el = document.getElementById('feed-list');
+function renderFeed() {
+  const cmds = getCmds();
+  const el   = document.getElementById('feed-list');
   const list = Object.entries(cmds);
-  document.getElementById('fcnt').textContent = list.length;
-
   if (!list.length) {
     el.innerHTML = `<div class="feed-empty"><div class="feed-empty-icon">🎭</div><div>Ще немає команд.<br>Створи першу!</div></div>`;
     return;
   }
   el.innerHTML = list.map(([name, d]) => `
     <div class="rp-item">
-      <div class="rp-top">
-        <span class="rp-name">${name}</span>
-        <span class="rp-emoji">${d.emoji || '🎭'}</span>
-      </div>
-      <div class="rp-text">${d.text || ''}</div>
+      <div class="rp-top"><span class="rp-name">${name}</span><span>${d.emoji||'🎭'}</span></div>
+      <div style="font-size:13px;color:#c8cbf0;margin-bottom:6px">${d.text||''}</div>
       <div class="rp-usage">В групі: <code>${name}</code> + reply</div>
-      <div class="rp-btns">
-        <button class="rbtn red" onclick="deleteCmd('${name}')">🗑️ Видалити</button>
-      </div>
+      <div><button class="rbtn" onclick="deleteCmd('${name}')">🗑️ Видалити</button></div>
     </div>`).join('');
-}
-
-async function deleteCmd(name) {
-  try {
-    if (myId) {
-      await fetch(API + '/sendMessage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: myId, text: 'видалити рп ' + name })
-      });
-    }
-    showToast('🗑️ Видалено', 'success');
-    await new Promise(r => setTimeout(r, 1000));
-    loadCmds();
-  } catch(e) {
-    showToast('❌ Помилка', 'error');
-  }
 }
 
 function setLoading(on) {
@@ -339,7 +212,6 @@ function setLoading(on) {
   document.getElementById('spinner').style.display = on ? 'block' : 'none';
   document.getElementById('btn-label').textContent = on ? 'Зберігаємо…' : '💾 Зберегти в бота';
 }
-
 function switchTab(tab) {
   document.getElementById('page-create').style.display = tab==='create' ? '' : 'none';
   document.getElementById('page-feed').style.display   = tab==='feed'   ? '' : 'none';
@@ -347,41 +219,12 @@ function switchTab(tab) {
   document.getElementById('tab-feed').classList.toggle('active', tab==='feed');
   document.getElementById('nav-create').classList.toggle('active', tab==='create');
   document.getElementById('nav-feed').classList.toggle('active', tab==='feed');
-  if (tab === 'feed') loadCmds();
+  if (tab === 'feed') renderFeed();
 }
-
 function showToast(msg, type='') {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (type ? ' ' + type : '');
+  t.textContent = msg; t.className = 'toast show' + (type ? ' '+type : '');
   setTimeout(() => t.className = 'toast', 2500);
-}
-
-// Завантажуємо кількість при старті
-if (myId) {
-  fetch(API + '/sendMessage', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: myId, text: 'мої рп json' })
-  }).then(() => new Promise(r => setTimeout(r, 2000)))
-  .then(() => fetch(API + '/getUpdates?limit=20&timeout=0'))
-  .then(r => r.json())
-  .then(data => {
-    const updates = data.result || [];
-    for (let i = updates.length - 1; i >= 0; i--) {
-      const msg = updates[i].message;
-      if (msg && msg.chat && String(msg.chat.id) === myId &&
-          msg.text && msg.text.startsWith('RP_JSON:')) {
-        try {
-          const rpData = JSON.parse(msg.text.replace('RP_JSON:', '').trim());
-          document.getElementById('fcnt').textContent = Object.keys(rpData).length;
-        } catch(e) {}
-        break;
-      }
-    }
-  }).catch(() => {
-    document.getElementById('fcnt').textContent = '0';
-  });
 }
 </script>
 </body>
